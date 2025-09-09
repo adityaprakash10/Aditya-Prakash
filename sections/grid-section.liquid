@@ -60,7 +60,6 @@
   background-color: #000;
   color: #fff;
 }
-/* Responsive */
 @media (max-width: 768px) {
   .grid-section .product-grid {
     grid-template-columns: 1fr;
@@ -153,14 +152,42 @@
 <section class="grid-section">
   <h2 class="section-title">Tisso vison in the wild</h2>
   <div class="product-grid">
-    {% for product in [product_1, product_2, product_3, product_4, product_5, product_6] %}
-      {% if product %}
-        <div class="product-item" data-product-handle="{{ product.handle }}">
-          <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-          <div class="plus-icon">+</div>
-        </div>
-      {% endif %}
-    {% endfor %}
+    {% if product_1 %}
+      <div class="product-item" data-product-handle="{{ product_1.handle }}">
+        <img src="{{ product_1.featured_image | img_url: 'medium' }}" alt="{{ product_1.title }}">
+        <div class="plus-icon">+</div>
+      </div>
+    {% endif %}
+    {% if product_2 %}
+      <div class="product-item" data-product-handle="{{ product_2.handle }}">
+        <img src="{{ product_2.featured_image | img_url: 'medium' }}" alt="{{ product_2.title }}">
+        <div class="plus-icon">+</div>
+      </div>
+    {% endif %}
+    {% if product_3 %}
+      <div class="product-item" data-product-handle="{{ product_3.handle }}">
+        <img src="{{ product_3.featured_image | img_url: 'medium' }}" alt="{{ product_3.title }}">
+        <div class="plus-icon">+</div>
+      </div>
+    {% endif %}
+    {% if product_4 %}
+      <div class="product-item" data-product-handle="{{ product_4.handle }}">
+        <img src="{{ product_4.featured_image | img_url: 'medium' }}" alt="{{ product_4.title }}">
+        <div class="plus-icon">+</div>
+      </div>
+    {% endif %}
+    {% if product_5 %}
+      <div class="product-item" data-product-handle="{{ product_5.handle }}">
+        <img src="{{ product_5.featured_image | img_url: 'medium' }}" alt="{{ product_5.title }}">
+        <div class="plus-icon">+</div>
+      </div>
+    {% endif %}
+    {% if product_6 %}
+      <div class="product-item" data-product-handle="{{ product_6.handle }}">
+        <img src="{{ product_6.featured_image | img_url: 'medium' }}" alt="{{ product_6.title }}">
+        <div class="plus-icon">+</div>
+      </div>
+    {% endif %}
   </div>
 
   <div id="product-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
@@ -180,174 +207,270 @@
 </section>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const productsData = {
-      {% for product in [product_1, product_2, product_3, product_4, product_5, product_6] %}
-      {% if product %}
-      "{{ product.handle }}": {
-        id: {{ product.id }},
-        title: "{{ product.title | escape }}",
-        description: {{ product.description | strip_newlines | json }},
-        featured_image: "{{ product.featured_image | img_url: 'medium' }}",
-        variants: [
-          {% for variant in product.variants %}
-          {
-            id: {{ variant.id }},
-            title: "{{ variant.title | escape }}",
-            option1: "{{ variant.option1 }}",
-            option2: "{{ variant.option2 }}",
-            option3: "{{ variant.option3 }}",
-            available: {{ variant.available | json }}
-          }{% unless forloop.last %},{% endunless %}
-          {% endfor %}
-        ]
-      }{% unless forloop.last %},{% endunless %}
-      {% endif %}
-      {% endfor %}
+document.addEventListener('DOMContentLoaded', function () {
+  const productsData = {
+    {% if product_1 %}
+    "{{ product_1.handle }}": {
+      id: {{ product_1.id }},
+      title: "{{ product_1.title | escape }}",
+      description: {{ product_1.description | strip_newlines | json }},
+      featured_image: "{{ product_1.featured_image | img_url: 'medium' }}",
+      variants: [
+        {% for variant in product_1.variants %}
+        {
+          id: {{ variant.id }},
+          title: "{{ variant.title | escape }}",
+          option1: "{{ variant.option1 }}",
+          option2: "{{ variant.option2 }}",
+          option3: "{{ variant.option3 }}",
+          available: {{ variant.available | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% unless product_2 or product_3 or product_4 or product_5 or product_6 %}{% else %},{% endunless %}
+    {% endif %}
+    {% if product_2 %}
+    "{{ product_2.handle }}": {
+      id: {{ product_2.id }},
+      title: "{{ product_2.title | escape }}",
+      description: {{ product_2.description | strip_newlines | json }},
+      featured_image: "{{ product_2.featured_image | img_url: 'medium' }}",
+      variants: [
+        {% for variant in product_2.variants %}
+        {
+          id: {{ variant.id }},
+          title: "{{ variant.title | escape }}",
+          option1: "{{ variant.option1 }}",
+          option2: "{{ variant.option2 }}",
+          option3: "{{ variant.option3 }}",
+          available: {{ variant.available | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% unless product_3 or product_4 or product_5 or product_6 %}{% else %},{% endunless %}
+    {% endif %}
+    {% if product_3 %}
+    "{{ product_3.handle }}": {
+      id: {{ product_3.id }},
+      title: "{{ product_3.title | escape }}",
+      description: {{ product_3.description | strip_newlines | json }},
+      featured_image: "{{ product_3.featured_image | img_url: 'medium' }}",
+      variants: [
+        {% for variant in product_3.variants %}
+        {
+          id: {{ variant.id }},
+          title: "{{ variant.title | escape }}",
+          option1: "{{ variant.option1 }}",
+          option2: "{{ variant.option2 }}",
+          option3: "{{ variant.option3 }}",
+          available: {{ variant.available | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% unless product_4 or product_5 or product_6 %}{% else %},{% endunless %}
+    {% endif %}
+    {% if product_4 %}
+    "{{ product_4.handle }}": {
+      id: {{ product_4.id }},
+      title: "{{ product_4.title | escape }}",
+      description: {{ product_4.description | strip_newlines | json }},
+      featured_image: "{{ product_4.featured_image | img_url: 'medium' }}",
+      variants: [
+        {% for variant in product_4.variants %}
+        {
+          id: {{ variant.id }},
+          title: "{{ variant.title | escape }}",
+          option1: "{{ variant.option1 }}",
+          option2: "{{ variant.option2 }}",
+          option3: "{{ variant.option3 }}",
+          available: {{ variant.available | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% unless product_5 or product_6 %}{% else %},{% endunless %}
+    {% endif %}
+    {% if product_5 %}
+    "{{ product_5.handle }}": {
+      id: {{ product_5.id }},
+      title: "{{ product_5.title | escape }}",
+      description: {{ product_5.description | strip_newlines | json }},
+      featured_image: "{{ product_5.featured_image | img_url: 'medium' }}",
+      variants: [
+        {% for variant in product_5.variants %}
+        {
+          id: {{ variant.id }},
+          title: "{{ variant.title | escape }}",
+          option1: "{{ variant.option1 }}",
+          option2: "{{ variant.option2 }}",
+          option3: "{{ variant.option3 }}",
+          available: {{ variant.available | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }{% unless product_6 %}{% else %},{% endunless %}
+    {% endif %}
+    {% if product_6 %}
+    "{{ product_6.handle }}": {
+      id: {{ product_6.id }},
+      title: "{{ product_6.title | escape }}",
+      description: {{ product_6.description | strip_newlines | json }},
+      featured_image: "{{ product_6.featured_image | img_url: 'medium' }}",
+      variants: [
+        {% for variant in product_6.variants %}
+        {
+          id: {{ variant.id }},
+          title: "{{ variant.title | escape }}",
+          option1: "{{ variant.option1 }}",
+          option2: "{{ variant.option2 }}",
+          option3: "{{ variant.option3 }}",
+          available: {{ variant.available | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+    {% endif %}
+  };
+
+  const modal = document.getElementById('product-modal');
+  const modalImage = document.getElementById('modal-image');
+  const modalName = document.getElementById('modal-name');
+  const modalPrice = document.getElementById('modal-price');
+  const modalDesc = document.getElementById('modal-desc');
+  const modalVariants = document.getElementById('modal-variants');
+  const modalSizes = document.getElementById('modal-sizes');
+  const addToCartBtn = document.getElementById('add-to-cart');
+
+  let selectedProduct = null;
+  let selectedVariantId = null;
+  let selectedSize = null;
+
+  document.querySelectorAll('.product-item .plus-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      const productHandle = e.target.closest('.product-item').dataset.productHandle;
+      openModal(productHandle);
+    });
+  });
+
+  document.getElementById('modal-close').addEventListener('click', () => {
+    closeModal();
+  });
+
+  function openModal(handle) {
+    if (!productsData[handle]) return;
+
+    selectedProduct = productsData[handle];
+    modalImage.src = selectedProduct.featured_image;
+    modalImage.alt = selectedProduct.title;
+    modalName.textContent = selectedProduct.title;
+
+    if (selectedProduct.variants.length > 0) {
+      modalPrice.textContent = `$${(selectedProduct.variants[0].price || '0.00')}`;
+    } else {
+      modalPrice.textContent = '';
+    }
+
+    modalDesc.textContent = selectedProduct.description;
+
+    modalVariants.innerHTML = '';
+    selectedSize = null;
+
+    modalSizes.innerHTML = '<option value="" disabled selected>Choose your size</option>';
+
+    const colorVariants = selectedProduct.variants.filter(v => v.option1);
+    colorVariants.forEach(v => {
+      const btn = document.createElement('button');
+      btn.classList.add('variant-button');
+      btn.textContent = v.option1;
+      btn.onclick = () => selectVariant(v);
+      modalVariants.appendChild(btn);
+    });
+
+    const sizesSet = new Set();
+    selectedProduct.variants.forEach(v => {
+      if (v.option2) sizesSet.add(v.option2);
+    });
+
+    sizesSet.forEach(size => {
+      const opt = document.createElement('option');
+      opt.value = size;
+      opt.textContent = size;
+      modalSizes.appendChild(opt);
+    });
+
+    modalSizes.onchange = (e) => {
+      selectedSize = e.target.value;
+      updateSelectedVariant();
     };
 
-    const modal = document.getElementById('product-modal');
-    const modalImage = document.getElementById('modal-image');
-    const modalName = document.getElementById('modal-name');
-    const modalPrice = document.getElementById('modal-price');
-    const modalDesc = document.getElementById('modal-desc');
-    const modalVariants = document.getElementById('modal-variants');
-    const modalSizes = document.getElementById('modal-sizes');
-    const addToCartBtn = document.getElementById('add-to-cart');
+    selectedVariantId = null;
 
-    let selectedProduct = null;
-    let selectedVariantId = null;
-    let selectedSize = null;
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+  }
 
-    document.querySelectorAll('.product-item .plus-icon').forEach(icon => {
-      icon.addEventListener('click', (e) => {
-        const productHandle = e.target.closest('.product-item').dataset.productHandle;
-        openModal(productHandle);
-      });
+  function selectVariant(variant) {
+    selectedVariantId = variant.id;
+    modalVariants.querySelectorAll('.variant-button').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === variant.option1);
+    });
+    updateSelectedVariant();
+  }
+
+  function updateSelectedVariant() {
+    if (!selectedProduct) return;
+
+    const variant = selectedProduct.variants.find(v => {
+      return v.option1 === getSelectedColor() && (selectedSize ? v.option2 === selectedSize : true);
     });
 
-    document.getElementById('modal-close').addEventListener('click', () => {
-      closeModal();
-    });
+    if (variant) selectedVariantId = variant.id;
+  }
 
-    function openModal(handle) {
-      if (!productsData[handle]) return;
+  function getSelectedColor() {
+    const activeBtn = modalVariants.querySelector('.variant-button.active');
+    return activeBtn ? activeBtn.textContent : null;
+  }
 
-      selectedProduct = productsData[handle];
-      modalImage.src = selectedProduct.featured_image;
-      modalImage.alt = selectedProduct.title;
-      modalName.textContent = selectedProduct.title;
+  function closeModal() {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+  }
 
-      if (selectedProduct.variants.length > 0) {
-        modalPrice.textContent = `$${(selectedProduct.variants[0].price || '0.00')}`;
-      } else {
-        modalPrice.textContent = '';
+  addToCartBtn.addEventListener('click', () => {
+    if (!selectedVariantId) {
+      alert('Please select a color and size.');
+      return;
+    }
+
+    addToCart(selectedVariantId).then(() => {
+      const selectedVariant = selectedProduct.variants.find(v => v.id === selectedVariantId);
+
+      if (selectedVariant.option1 === 'Black' && selectedVariant.option2 === 'Medium') {
+        const softWinterJacketHandle = 'soft-winter-jacket';
+
+        fetch(`/products/${softWinterJacketHandle}.js`)
+          .then(res => res.json())
+          .then(product => {
+            if (product.variants && product.variants.length > 0) {
+              return addToCart(product.variants[0].id);
+            }
+          })
+          .catch(err => console.error(err));
       }
+    }).catch(err => console.error(err));
 
-      modalDesc.textContent = selectedProduct.description;
-
-      modalVariants.innerHTML = '';
-      selectedSize = null;
-
-      modalSizes.innerHTML = '<option value="" disabled selected>Choose your size</option>';
-
-      const colorVariants = selectedProduct.variants.filter(v => v.option1);
-      colorVariants.forEach(v => {
-        const btn = document.createElement('button');
-        btn.classList.add('variant-button');
-        btn.textContent = v.option1;
-        btn.onclick = () => selectVariant(v);
-        modalVariants.appendChild(btn);
-      });
-
-      const sizesSet = new Set();
-      selectedProduct.variants.forEach(v => {
-        if (v.option2) sizesSet.add(v.option2);
-      });
-
-      sizesSet.forEach(size => {
-        const opt = document.createElement('option');
-        opt.value = size;
-        opt.textContent = size;
-        modalSizes.appendChild(opt);
-      });
-
-      modalSizes.onchange = (e) => {
-        selectedSize = e.target.value;
-        updateSelectedVariant();
-      };
-
-      selectedVariantId = null;
-
-      modal.style.display = 'flex';
-      modal.setAttribute('aria-hidden', 'false');
-    }
-
-    function selectVariant(variant) {
-      selectedVariantId = variant.id;
-      modalVariants.querySelectorAll('.variant-button').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent === variant.option1);
-      });
-      updateSelectedVariant();
-    }
-
-    function updateSelectedVariant() {
-      if (!selectedProduct) return;
-
-      const variant = selectedProduct.variants.find(v => {
-        return v.option1 === getSelectedColor() && (selectedSize ? v.option2 === selectedSize : true);
-      });
-
-      if (variant) selectedVariantId = variant.id;
-    }
-
-    function getSelectedColor() {
-      const activeBtn = modalVariants.querySelector('.variant-button.active');
-      return activeBtn ? activeBtn.textContent : null;
-    }
-
-    function closeModal() {
-      modal.style.display = 'none';
-      modal.setAttribute('aria-hidden', 'true');
-    }
-
-    addToCartBtn.addEventListener('click', () => {
-      if (!selectedVariantId) {
-        alert('Please select a color and size.');
-        return;
-      }
-
-      addToCart(selectedVariantId).then(() => {
-        const selectedVariant = selectedProduct.variants.find(v => v.id === selectedVariantId);
-
-        if (selectedVariant.option1 === 'Black' && selectedVariant.option2 === 'Medium') {
-          const softWinterJacketHandle = 'soft-winter-jacket';
-
-          fetch(`/products/${softWinterJacketHandle}.js`)
-            .then(res => res.json())
-            .then(product => {
-              if (product.variants && product.variants.length > 0) {
-                return addToCart(product.variants[0].id);
-              }
-            })
-            .catch(err => console.error(err));
-        }
-      }).catch(err => console.error(err));
-
-      closeModal();
-    });
-
-    function addToCart(variantId) {
-      return fetch('/cart/add.js', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id: variantId, quantity: 1 })
-      }).then(response => {
-        if (!response.ok) throw new Error('Failed to add to cart');
-        return response.json();
-      });
-    }
+    closeModal();
   });
+
+  function addToCart(variantId) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    }).then(response => {
+      if (!response.ok) throw new Error('Failed to add to cart');
+      return response.json();
+    });
+  }
+});
 </script>

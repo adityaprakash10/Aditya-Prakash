@@ -50,6 +50,23 @@
 </div>
 
 <style>
+.grid-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.grid-item { position: relative; }
+.grid-item img { width: 100%; display: block; }
+.grid-item-overlay {
+  position: absolute; top: 10px; right: 10px;
+}
+.open-modal-btn {
+  background: #000; color: #fff; border: none;
+  border-radius: 50%; width: 32px; height: 32px;
+  cursor: pointer; font-size: 20px; line-height: 32px;
+}
+
+/* Modal backdrop */
 .modal {
   display: none;
   position: fixed;
@@ -61,30 +78,21 @@
   z-index: 9999;
 }
 
+/* Compact modal box */
 .modal-content {
   background: #fff;
   padding: 15px;
-  border-radius: 6px;
-  max-width: 320px;   /* 👈 compact width */
+  border-radius: 8px;
+  max-width: 340px;   /* 👈 smaller width */
   width: 100%;
   position: relative;
   text-align: left;
 }
 
+/* Product image inside modal */
 .modal-content img {
   width: 100%;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-.modal-content h2 {
-  font-size: 16px;
-  margin: 8px 0 4px 0;
-}
-
-.modal-content p {
-  font-size: 13px;
-  color: #444;
+  border-radius: 6px;
   margin-bottom: 10px;
 }
 
@@ -95,6 +103,19 @@
   font-size: 18px;
 }
 
+/* Title & description */
+.modal-content h2 {
+  font-size: 16px;
+  margin: 8px 0 4px;
+}
+
+.modal-content p {
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+/* Color buttons row */
 .color-options {
   display: flex;
   gap: 8px;
@@ -111,12 +132,12 @@
   border-radius: 4px;
   text-align: center;
 }
-
 .variant-button.active {
   background: #000;
   color: #fff;
 }
 
+/* Size dropdown */
 #sizeSelect {
   width: 100%;
   padding: 8px;
@@ -126,6 +147,7 @@
   margin-bottom: 12px;
 }
 
+/* Add to cart button */
 #addToCartBtn {
   background: #000;
   color: #fff;
@@ -136,8 +158,7 @@
   border-radius: 4px;
   cursor: pointer;
 }
-cursor: pointer;
-}
+
 </style>
 
 <script>

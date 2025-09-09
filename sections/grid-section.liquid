@@ -23,8 +23,8 @@
   font-size: 28px;
   font-weight: 600;
   margin-bottom: 30px;
-  padding-left: 10px;
   text-align: left;
+  padding-left: 10px;
 }
 .grid-section .product-grid {
   display: grid;
@@ -33,10 +33,10 @@
 }
 .grid-section .product-item {
   position: relative;
-  cursor: pointer;
   border-radius: 6px;
   box-shadow: 0 3px 16px rgba(0,0,0,0.08);
   overflow: hidden;
+  cursor: pointer;
 }
 .grid-section .product-item img {
   width: 100%;
@@ -45,8 +45,8 @@
 }
 .grid-section .plus-icon {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 16px;
+  right: 16px;
   width: 48px;
   height: 48px;
   background: #f4f4f4;
@@ -56,13 +56,13 @@
   font-weight: 700;
   color: #232323;
   display: flex;
-  align-items: center;
   justify-content: center;
-  cursor: pointer;
+  align-items: center;
   box-shadow: 0 4px 16px rgba(0,0,0,0.16);
   user-select: none;
-  transition: background 0.18s, border-color 0.18s, color 0.18s;
-  z-index: 5;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+  z-index: 10;
 }
 .grid-section .product-item:hover .plus-icon {
   background: #232323;
@@ -72,19 +72,19 @@
 
 .modal-overlay {
   position: fixed;
-  display: none;
   inset: 0;
   background: rgba(0,0,0,0.5);
-  z-index: 9999;
+  display: none;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
 }
 
 .modal {
   background: white;
-  border-radius: 8px;
-  width: 100%;
+  width: 90%;
   max-width: 420px;
+  border-radius: 8px;
   padding: 24px;
   position: relative;
   font-family: 'Inter', sans-serif;
@@ -92,8 +92,8 @@
 
 .modal-close {
   position: absolute;
-  right: 16px;
-  top: 16px;
+  top: 12px;
+  right: 12px;
   font-size: 22px;
   font-weight: 700;
   cursor: pointer;
@@ -104,10 +104,10 @@
 
 .modal img {
   width: 100%;
-  object-fit: cover;
-  margin-bottom: 18px;
-  border-radius: 6px;
   max-height: 220px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 18px;
 }
 
 .modal .product-name {
@@ -117,46 +117,48 @@
 }
 
 .modal .product-price {
-  font-size: 20px;
   font-weight: 600;
-  margin-bottom: 8px;
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .modal .product-desc {
   font-size: 16px;
   color: #282828;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .variant-options {
   display: flex;
   gap: 0;
   justify-content: stretch;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .variant-button {
   flex: 1 1 0;
   padding: 14px 0;
+  font-size: 18px;
+  font-weight: 700;
   border: 2px solid #222;
   background-color: #fff;
   color: #222;
-  font-weight: 700;
-  font-size: 18px;
   text-align: center;
   cursor: pointer;
   margin-right: -2px;
-  user-select: none;
   border-radius: 0;
-  transition: all 0.2s;
+  transition: all 0.18s ease;
   outline: none;
+  user-select: none;
 }
 
 .variant-button:last-child {
   margin-right: 0;
 }
 
-.variant-button.active {
+.variant-button.active,
+.variant-button:focus,
+.variant-button:active {
   background-color: #222;
   color: #fff;
   border-color: #222;
@@ -168,7 +170,7 @@
   font-weight: 700;
   font-size: 18px;
   border: 2px solid #222;
-  background: #fff;
+  background-color: #fff;
   color: #222;
   margin-bottom: 20px;
   border-radius: 0;
@@ -181,12 +183,13 @@
 }
 
 .add-to-cart-btn {
+  display: block;
   width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  font-weight: 700;
   background-color: #000;
   color: #fff;
-  padding: 14px;
-  font-weight: 700;
-  font-size: 18px;
   border-radius: 2px;
   border: none;
   cursor: pointer;
@@ -401,20 +404,18 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectedSize = null;
   let selectedVariantId = null;
 
-  document.querySelector('.product-grid').addEventListener('click', (event) => {
+  document.querySelector('.product-grid').addEventListener('click', event => {
     const plusIcon = event.target.closest('.plus-icon');
     if (plusIcon) {
       const productItem = plusIcon.closest('.product-item');
-      if (productItem) {
-        const handle = productItem.getAttribute('data-product-handle');
-        if (handle) openModal(handle);
-      }
+      const handle = productItem?.dataset.productHandle;
+      if (handle) openModal(handle);
     }
   });
 
   addToCartBtn.addEventListener('click', () => {
     if (!selectedVariantId) {
-      alert('Please select a color and size.');
+      alert('Please select both color and size.');
       return;
     }
     addToCart(selectedVariantId).then(closeModal).catch(console.error);
@@ -423,46 +424,61 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('modal-close').addEventListener('click', closeModal);
 
   function openModal(handle) {
-    if (!productsData.hasOwnProperty(handle)) return;
+    if (!productsData[handle]) return;
     selectedProduct = productsData[handle];
+
     modalImage.src = selectedProduct.featured_image;
     modalImage.alt = selectedProduct.title;
     modalName.textContent = selectedProduct.title;
-    modalPrice.textContent = selectedProduct.variants.length > 0 ? `$${(selectedProduct.variants[0].price || '0.00')}` : '';
+    modalPrice.textContent = selectedProduct.variants.length
+      ? `$${(selectedProduct.variants[0].price || '0.00')}`
+      : '';
     modalDesc.innerHTML = selectedProduct.description;
 
-    // Render color buttons
-    const colors = Array.from(new Set(selectedProduct.variants.map(v => v.option1).filter(Boolean)));
+    const colors = Array.from(
+      new Set(selectedProduct.variants.map(v => v.option1).filter(Boolean))
+    );
     colorOptions.innerHTML = '';
+    
     colors.forEach(color => {
-      const btn = document.createElement('button');
-      btn.className = 'variant-button';
-      btn.textContent = color;
-      btn.onclick = () => {
+      const button = document.createElement('button');
+      button.className = 'variant-button';
+      button.textContent = color;
+      button.onclick = () => {
         selectedColor = color;
-        Array.from(colorOptions.children).forEach(b => b.classList.toggle('active', b.textContent === color));
+        Array.from(colorOptions.children).forEach(b =>
+          b.classList.toggle('active', b.textContent === color)
+        );
         updateSizeDropdown();
         updateSelectedVariant();
       };
-      colorOptions.appendChild(btn);
+      colorOptions.appendChild(button);
     });
 
     if (colors.length > 0) {
       selectedColor = colors[0];
       colorOptions.children[0].classList.add('active');
-    } else {
-      selectedColor = null;
     }
-
+    
     function updateSizeDropdown() {
-      const sizes = Array.from(new Set(selectedProduct.variants.filter(v => v.option1 === selectedColor).map(v => v.option2).filter(Boolean)));
+      const sizes = Array.from(
+        new Set(
+          selectedProduct.variants
+            .filter(v => v.option1 === selectedColor)
+            .map(v => v.option2)
+            .filter(Boolean)
+        )
+      );
+
       sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
+
       sizes.forEach(size => {
-        const opt = document.createElement('option');
-        opt.value = size;
-        opt.textContent = size;
-        sizeSelect.appendChild(opt);
+        const option = document.createElement('option');
+        option.value = size;
+        option.textContent = size;
+        sizeSelect.appendChild(option);
       });
+
       selectedSize = null;
     }
 
@@ -480,7 +496,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateSelectedVariant() {
     if (!selectedProduct) return;
-    const variant = selectedProduct.variants.find(v => v.option1 === selectedColor && v.option2 === selectedSize);
+    const variant = selectedProduct.variants.find(
+      v => v.option1 === selectedColor && v.option2 === selectedSize
+    );
     selectedVariantId = variant ? variant.id : null;
   }
 
@@ -493,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: variantId, quantity: 1 })
+      body: JSON.stringify({ id: variantId, quantity: 1 }),
     }).then(response => {
       if (!response.ok) throw new Error('Failed to add to cart');
       return response.json();

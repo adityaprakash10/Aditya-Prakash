@@ -33,9 +33,11 @@
       "label": "Select Product 6"
     }
   ],
-  "presets": [{
-    "name": "Grid Section"
-  }]
+  "presets": [
+    {
+      "name": "Grid Section"
+    }
+  ]
 }
 {% endschema %}
 
@@ -45,26 +47,31 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
 .grid-section .section-title {
   font-size: 28px;
   font-weight: 600;
   margin-bottom: 30px;
   text-align: center;
 }
+
 .grid-section .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
 }
+
 .grid-section .product-item {
   position: relative;
   cursor: pointer;
 }
+
 .grid-section .product-item img {
   width: 100%;
   height: auto;
   display: block;
 }
+
 .grid-section .plus-icon {
   position: absolute;
   top: 8px;
@@ -82,16 +89,19 @@
   border: 1px solid #ccc;
   transition: background-color 0.3s ease;
 }
+
 .grid-section .product-item:hover .plus-icon {
   background-color: #000;
   color: #fff;
 }
+
 /* Responsive */
 @media (max-width: 768px) {
   .grid-section .product-grid {
     grid-template-columns: 1fr;
   }
 }
+
 .modal-overlay {
   position: fixed;
   display: none;
@@ -101,6 +111,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .modal {
   background: white;
   padding: 20px;
@@ -109,34 +120,41 @@
   border-radius: 6px;
   position: relative;
 }
+
 .modal-close {
   position: absolute;
-  top:10px;
-  right:10px;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
 }
+
 .modal img {
   width: 100%;
   max-height: 200px;
   object-fit: contain;
 }
+
 .modal .product-name {
   font-weight: 600;
   margin: 15px 0 5px;
 }
+
 .modal .product-price {
   font-weight: 500;
   margin-bottom: 10px;
 }
+
 .modal .product-desc {
   font-size: 14px;
   margin-bottom: 15px;
 }
+
 .variant-options {
   margin-bottom: 15px;
 }
+
 .variant-button {
   border: 1px solid #000;
   padding: 5px 10px;
@@ -144,14 +162,18 @@
   cursor: pointer;
   background: white;
 }
+
 .variant-button.active {
   background: black;
   color: white;
 }
+
 .size-select {
   width: 100%;
   padding: 7px;
+  margin-bottom: 15px;
 }
+
 .add-to-cart-btn {
   width: 100%;
   background: black;
@@ -163,6 +185,7 @@
   border: none;
   transition: background-color 0.3s ease;
 }
+
 .add-to-cart-btn:hover {
   background: #222;
 }
@@ -174,13 +197,14 @@
     {% for i in (1..6) %}
       {% assign product = all_products[section.settings["product_" | append: i ]] %}
       {% if product %}
-      <div class="product-item" data-product-handle="{{ product.handle }}">
-        <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-        <div class="plus-icon">+</div>
-      </div>
+        <div class="product-item" data-product-handle="{{ product.handle }}">
+          <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+          <div class="plus-icon">+</div>
+        </div>
       {% endif %}
     {% endfor %}
   </div>
+
   <div id="product-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="modal" role="document">
       <button id="modal-close" class="modal-close" aria-label="Close modal">&times;</button>
@@ -198,146 +222,174 @@
 </section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const productsData = {};
-  {% for i in (1..6) %}
-    {% assign prod = all_products[section.settings["product_" | append: i ]] %}
-    {% if prod %}
-      productsData["{{ prod.handle }}"] = {
-        id: {{ prod.id }},
-        title: "{{ prod.title }}",
-        description: {{ prod.description | strip_newlines | json }},
-        featured_image: "{{ prod.featured_image | img_url: 'medium' }}",
-        variants: [
-          {% for variant in prod.variants %}
-          {
-            id: {{ variant.id }},
-            title: "{{ variant.title }}",
-            option1: "{{ variant.option1 }}",
-            option2: "{{ variant.option2 }}",
-            option3: "{{ variant.option3 }}",
-            available: {{ variant.available | json }}
-          }{% if forloop.last == false %},{% endif %}
-          {% endfor %}
-        ]
-      };
-    {% endif %}
-  {% endfor %}
-  const modal = document.getElementById('product-modal');
-  const modalImage = document.getElementById('modal-image');
-  const modalName = document.getElementById('modal-name');
-  const modalPrice = document.getElementById('modal-price');
-  const modalDesc = document.getElementById('modal-desc');
-  const modalVariants = document.getElementById('modal-variants');
-  const modalSizes = document.getElementById('modal-sizes');
-  const addToCartBtn = document.getElementById('add-to-cart');
-  let selectedProduct = null;
-  let selectedVariantId = null;
-  let selectedSize = null;
-  document.querySelectorAll('.product-item .plus-icon').forEach(icon => {
-    icon.addEventListener('click', (e) => {
-      const productHandle = e.target.closest('.product-item').dataset.productHandle;
-      openModal(productHandle);
+  document.addEventListener('DOMContentLoaded', function () {
+    const productsData = {};
+    {% for i in (1..6) %}
+      {% assign prod = all_products[section.settings["product_" | append: i ]] %}
+      {% if prod %}
+        productsData["{{ prod.handle }}"] = {
+          id: {{ prod.id }},
+          title: "{{ prod.title | escape }}",
+          description: {{ prod.description | strip_newlines | json }},
+          featured_image: "{{ prod.featured_image | img_url: 'medium' }}",
+          variants: [
+            {% for variant in prod.variants %}
+            {
+              id: {{ variant.id }},
+              title: "{{ variant.title | escape }}",
+              option1: "{{ variant.option1 }}",
+              option2: "{{ variant.option2 }}",
+              option3: "{{ variant.option3 }}",
+              available: {{ variant.available | json }}
+            }{% if forloop.last == false %},{% endif %}
+            {% endfor %}
+          ]
+        };
+      {% endif %}
+    {% endfor %}
+
+    const modal = document.getElementById('product-modal');
+    const modalImage = document.getElementById('modal-image');
+    const modalName = document.getElementById('modal-name');
+    const modalPrice = document.getElementById('modal-price');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalVariants = document.getElementById('modal-variants');
+    const modalSizes = document.getElementById('modal-sizes');
+    const addToCartBtn = document.getElementById('add-to-cart');
+
+    let selectedProduct = null;
+    let selectedVariantId = null;
+    let selectedSize = null;
+
+    document.querySelectorAll('.product-item .plus-icon').forEach(icon => {
+      icon.addEventListener('click', (e) => {
+        const productHandle = e.target.closest('.product-item').dataset.productHandle;
+        openModal(productHandle);
+      });
     });
-  });
-  document.getElementById('modal-close').addEventListener('click', () => {
-    closeModal();
-  });
-  function openModal(handle) {
-    if (!productsData[handle]) return;
-    selectedProduct = productsData[handle];
-    modalImage.src = selectedProduct.featured_image;
-    modalImage.alt = selectedProduct.title;
-    modalName.textContent = selectedProduct.title;
-    if(selectedProduct.variants.length > 0) {
-      modalPrice.textContent = `$${(selectedProduct.variants[0].price || '0.00')}`;
-    } else {
-      modalPrice.textContent = '';
-    }
-    modalDesc.textContent = selectedProduct.description;
-    modalVariants.innerHTML = '';
-    selectedSize = null;
-    modalSizes.innerHTML = '<option value="" disabled selected>Choose your size</option>';
-    const colorVariants = selectedProduct.variants.filter(v => v.option1);
-    colorVariants.forEach(v => {
-      const btn = document.createElement('button');
-      btn.classList.add('variant-button');
-      btn.textContent = v.option1;
-      btn.onclick = () => selectVariant(v);
-      modalVariants.appendChild(btn);
+
+    document.getElementById('modal-close').addEventListener('click', () => {
+      closeModal();
     });
-    const sizesSet = new Set();
-    selectedProduct.variants.forEach(v => {
-      if(v.option2) sizesSet.add(v.option2);
-    });
-    sizesSet.forEach(size => {
-      const opt = document.createElement('option');
-      opt.value = size;
-      opt.textContent = size;
-      modalSizes.appendChild(opt);
-    });
-    modalSizes.onchange = (e) => {
-      selectedSize = e.target.value;
-      updateSelectedVariant();
-    };
-    selectedVariantId = null;
-    modal.style.display = 'flex';
-    modal.setAttribute('aria-hidden', 'false');
-  }
-  function selectVariant(variant) {
-    selectedVariantId = variant.id;
-    modalVariants.querySelectorAll('.variant-button').forEach(btn => {
-      btn.classList.toggle('active', btn.textContent === variant.option1);
-    });
-    updateSelectedVariant();
-  }
-  function updateSelectedVariant() {
-    if (!selectedProduct) return;
-    const variant = selectedProduct.variants.find(v => {
-      return v.option1 === getSelectedColor() && (selectedSize ? v.option2 === selectedSize : true);
-    });
-    if (variant) selectedVariantId = variant.id;
-  }
-  function getSelectedColor() {
-    const activeBtn = modalVariants.querySelector('.variant-button.active');
-    return activeBtn ? activeBtn.textContent : null;
-  }
-  function closeModal() {
-    modal.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
-  }
-  addToCartBtn.addEventListener('click', () => {
-    if (!selectedVariantId) {
-      alert('Please select a color and size.');
-      return;
-    }
-    addToCart(selectedVariantId).then(() => {
-      const selectedVariant = selectedProduct.variants.find(v => v.id === selectedVariantId);
-      if (selectedVariant.option1 === 'Black' && selectedVariant.option2 === 'Medium') {
-        const softWinterJacketHandle = 'soft-winter-jacket';
-        fetch(`/products/${softWinterJacketHandle}.js`)
-          .then(res => res.json())
-          .then(product => {
-            if (product.variants && product.variants.length > 0) {
-              return addToCart(product.variants[0].id);
-            }
-          })
-          .catch(err => console.error(err));
+
+    function openModal(handle) {
+      if (!productsData[handle]) return;
+
+      selectedProduct = productsData[handle];
+      modalImage.src = selectedProduct.featured_image;
+      modalImage.alt = selectedProduct.title;
+      modalName.textContent = selectedProduct.title;
+
+      if(selectedProduct.variants.length > 0) {
+        modalPrice.textContent = `$${(selectedProduct.variants[0].price || '0.00')}`;
+      } else {
+        modalPrice.textContent = '';
       }
-    }).catch(err => console.error(err));
-    closeModal();
-  });
-  function addToCart(variantId) {
-    return fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id: variantId, quantity: 1 })
-    }).then(response => {
-      if (!response.ok) throw new Error('Failed to add to cart');
-      return response.json();
+
+      modalDesc.textContent = selectedProduct.description;
+
+      modalVariants.innerHTML = '';
+      selectedSize = null;
+
+      modalSizes.innerHTML = '<option value="" disabled selected>Choose your size</option>';
+
+      const colorVariants = selectedProduct.variants.filter(v => v.option1);
+      colorVariants.forEach(v => {
+        const btn = document.createElement('button');
+        btn.classList.add('variant-button');
+        btn.textContent = v.option1;
+        btn.onclick = () => selectVariant(v);
+        modalVariants.appendChild(btn);
+      });
+
+      const sizesSet = new Set();
+      selectedProduct.variants.forEach(v => {
+        if(v.option2) sizesSet.add(v.option2);
+      });
+
+      sizesSet.forEach(size => {
+        const opt = document.createElement('option');
+        opt.value = size;
+        opt.textContent = size;
+        modalSizes.appendChild(opt);
+      });
+
+      modalSizes.onchange = (e) => {
+        selectedSize = e.target.value;
+        updateSelectedVariant();
+      };
+
+      selectedVariantId = null;
+
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function selectVariant(variant) {
+      selectedVariantId = variant.id;
+      modalVariants.querySelectorAll('.variant-button').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === variant.option1);
+      });
+      updateSelectedVariant();
+    }
+
+    function updateSelectedVariant() {
+      if (!selectedProduct) return;
+
+      const variant = selectedProduct.variants.find(v => {
+        return v.option1 === getSelectedColor() && (selectedSize ? v.option2 === selectedSize : true);
+      });
+
+      if (variant) selectedVariantId = variant.id;
+    }
+
+    function getSelectedColor() {
+      const activeBtn = modalVariants.querySelector('.variant-button.active');
+      return activeBtn ? activeBtn.textContent : null;
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    addToCartBtn.addEventListener('click', () => {
+      if (!selectedVariantId) {
+        alert('Please select a color and size.');
+        return;
+      }
+
+      addToCart(selectedVariantId).then(() => {
+        const selectedVariant = selectedProduct.variants.find(v => v.id === selectedVariantId);
+
+        if (selectedVariant.option1 === 'Black' && selectedVariant.option2 === 'Medium') {
+          const softWinterJacketHandle = 'soft-winter-jacket';
+
+          fetch(`/products/${softWinterJacketHandle}.js`)
+            .then(res => res.json())
+            .then(product => {
+              if (product.variants && product.variants.length > 0) {
+                return addToCart(product.variants[0].id);
+              }
+            })
+            .catch(err => console.error(err));
+        }
+      }).catch(err => console.error(err));
+
+      closeModal();
     });
-  }
-});
+
+    function addToCart(variantId) {
+      return fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: variantId, quantity: 1 })
+      }).then(response => {
+        if (!response.ok) throw new Error('Failed to add to cart');
+        return response.json();
+      });
+    }
+  });
 </script>

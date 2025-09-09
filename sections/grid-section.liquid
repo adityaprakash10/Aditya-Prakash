@@ -2,42 +2,14 @@
 {
   "name": "Grid Section",
   "settings": [
-    {
-      "type": "product",
-      "id": "product_1",
-      "label": "Select Product 1"
-    },
-    {
-      "type": "product",
-      "id": "product_2",
-      "label": "Select Product 2"
-    },
-    {
-      "type": "product",
-      "id": "product_3",
-      "label": "Select Product 3"
-    },
-    {
-      "type": "product",
-      "id": "product_4",
-      "label": "Select Product 4"
-    },
-    {
-      "type": "product",
-      "id": "product_5",
-      "label": "Select Product 5"
-    },
-    {
-      "type": "product",
-      "id": "product_6",
-      "label": "Select Product 6"
-    }
+    { "type": "product", "id": "product_1", "label": "Select Product 1" },
+    { "type": "product", "id": "product_2", "label": "Select Product 2" },
+    { "type": "product", "id": "product_3", "label": "Select Product 3" },
+    { "type": "product", "id": "product_4", "label": "Select Product 4" },
+    { "type": "product", "id": "product_5", "label": "Select Product 5" },
+    { "type": "product", "id": "product_6", "label": "Select Product 6" }
   ],
-  "presets": [
-    {
-      "name": "Grid Section"
-    }
-  ]
+  "presets": [{ "name": "Grid Section" }]
 }
 {% endschema %}
 
@@ -47,31 +19,26 @@
   max-width: 1200px;
   margin: 0 auto;
 }
-
 .grid-section .section-title {
   font-size: 28px;
   font-weight: 600;
   margin-bottom: 30px;
   text-align: center;
 }
-
 .grid-section .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
 }
-
 .grid-section .product-item {
   position: relative;
   cursor: pointer;
 }
-
 .grid-section .product-item img {
   width: 100%;
   height: auto;
   display: block;
 }
-
 .grid-section .plus-icon {
   position: absolute;
   top: 8px;
@@ -89,19 +56,16 @@
   border: 1px solid #ccc;
   transition: background-color 0.3s ease;
 }
-
 .grid-section .product-item:hover .plus-icon {
   background-color: #000;
   color: #fff;
 }
-
 /* Responsive */
 @media (max-width: 768px) {
   .grid-section .product-grid {
     grid-template-columns: 1fr;
   }
 }
-
 .modal-overlay {
   position: fixed;
   display: none;
@@ -111,7 +75,6 @@
   align-items: center;
   justify-content: center;
 }
-
 .modal {
   background: white;
   padding: 20px;
@@ -120,7 +83,6 @@
   border-radius: 6px;
   position: relative;
 }
-
 .modal-close {
   position: absolute;
   top: 10px;
@@ -129,32 +91,26 @@
   font-size: 18px;
   font-weight: bold;
 }
-
 .modal img {
   width: 100%;
   max-height: 200px;
   object-fit: contain;
 }
-
 .modal .product-name {
   font-weight: 600;
   margin: 15px 0 5px;
 }
-
 .modal .product-price {
   font-weight: 500;
   margin-bottom: 10px;
 }
-
 .modal .product-desc {
   font-size: 14px;
   margin-bottom: 15px;
 }
-
 .variant-options {
   margin-bottom: 15px;
 }
-
 .variant-button {
   border: 1px solid #000;
   padding: 5px 10px;
@@ -162,18 +118,15 @@
   cursor: pointer;
   background: white;
 }
-
 .variant-button.active {
   background: black;
   color: white;
 }
-
 .size-select {
   width: 100%;
   padding: 7px;
   margin-bottom: 15px;
 }
-
 .add-to-cart-btn {
   width: 100%;
   background: black;
@@ -185,17 +138,22 @@
   border: none;
   transition: background-color 0.3s ease;
 }
-
 .add-to-cart-btn:hover {
   background: #222;
 }
 {% endstylesheet %}
 
+{%- assign product_1 = all_products[section.settings.product_1] -%}
+{%- assign product_2 = all_products[section.settings.product_2] -%}
+{%- assign product_3 = all_products[section.settings.product_3] -%}
+{%- assign product_4 = all_products[section.settings.product_4] -%}
+{%- assign product_5 = all_products[section.settings.product_5] -%}
+{%- assign product_6 = all_products[section.settings.product_6] -%}
+
 <section class="grid-section">
   <h2 class="section-title">Tisso vison in the wild</h2>
   <div class="product-grid">
-    {% for i in (1..6) %}
-      {% assign product = all_products[section.settings["product_" | append: i ]] %}
+    {% for product in [product_1, product_2, product_3, product_4, product_5, product_6] %}
       {% if product %}
         <div class="product-item" data-product-handle="{{ product.handle }}">
           <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
@@ -223,30 +181,30 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const productsData = {};
-    {% for i in (1..6) %}
-      {% assign prod = all_products[section.settings["product_" | append: i ]] %}
-      {% if prod %}
-        productsData["{{ prod.handle }}"] = {
-          id: {{ prod.id }},
-          title: "{{ prod.title | escape }}",
-          description: {{ prod.description | strip_newlines | json }},
-          featured_image: "{{ prod.featured_image | img_url: 'medium' }}",
-          variants: [
-            {% for variant in prod.variants %}
-            {
-              id: {{ variant.id }},
-              title: "{{ variant.title | escape }}",
-              option1: "{{ variant.option1 }}",
-              option2: "{{ variant.option2 }}",
-              option3: "{{ variant.option3 }}",
-              available: {{ variant.available | json }}
-            }{% if forloop.last == false %},{% endif %}
-            {% endfor %}
-          ]
-        };
+    const productsData = {
+      {% for product in [product_1, product_2, product_3, product_4, product_5, product_6] %}
+      {% if product %}
+      "{{ product.handle }}": {
+        id: {{ product.id }},
+        title: "{{ product.title | escape }}",
+        description: {{ product.description | strip_newlines | json }},
+        featured_image: "{{ product.featured_image | img_url: 'medium' }}",
+        variants: [
+          {% for variant in product.variants %}
+          {
+            id: {{ variant.id }},
+            title: "{{ variant.title | escape }}",
+            option1: "{{ variant.option1 }}",
+            option2: "{{ variant.option2 }}",
+            option3: "{{ variant.option3 }}",
+            available: {{ variant.available | json }}
+          }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ]
+      }{% unless forloop.last %},{% endunless %}
       {% endif %}
-    {% endfor %}
+      {% endfor %}
+    };
 
     const modal = document.getElementById('product-modal');
     const modalImage = document.getElementById('modal-image');
@@ -280,7 +238,7 @@
       modalImage.alt = selectedProduct.title;
       modalName.textContent = selectedProduct.title;
 
-      if(selectedProduct.variants.length > 0) {
+      if (selectedProduct.variants.length > 0) {
         modalPrice.textContent = `$${(selectedProduct.variants[0].price || '0.00')}`;
       } else {
         modalPrice.textContent = '';
@@ -304,7 +262,7 @@
 
       const sizesSet = new Set();
       selectedProduct.variants.forEach(v => {
-        if(v.option2) sizesSet.add(v.option2);
+        if (v.option2) sizesSet.add(v.option2);
       });
 
       sizesSet.forEach(size => {

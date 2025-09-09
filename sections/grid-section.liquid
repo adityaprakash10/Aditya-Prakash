@@ -64,13 +64,11 @@
   transition: background 0.18s, color 0.18s, border 0.2s;
   z-index: 2;
 }
-
 .grid-section .product-item:hover .plus-icon {
   background: #222;
   color: #fff;
   border-color: #222;
 }
-
 .modal-overlay {
   position: fixed;
   display: none;
@@ -114,7 +112,7 @@
 .modal .product-price {
   font-weight: 600;
   font-size: 20px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 .modal .product-desc {
   font-size: 16px;
@@ -367,11 +365,18 @@ document.addEventListener('DOMContentLoaded', function () {
   let selectedVariantId = null;
   let selectedSize = null;
 
-  document.querySelectorAll('.product-item .plus-icon').forEach(icon => {
-    icon.addEventListener('click', (e) => {
-      const productHandle = e.target.closest('.product-item').dataset.productHandle;
-      openModal(productHandle);
-    });
+  // Use event delegation for plus icon clicks
+  document.querySelector('.product-grid').addEventListener('click', (event) => {
+    const plusIcon = event.target.closest('.plus-icon');
+    if (plusIcon) {
+      const productItem = plusIcon.closest('.product-item');
+      if (productItem) {
+        const handle = productItem.getAttribute('data-product-handle');
+        if (handle) {
+          openModal(handle);
+        }
+      }
+    }
   });
 
   document.getElementById('modal-close').addEventListener('click', () => {
@@ -380,19 +385,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function openModal(handle) {
     if (!productsData[handle]) return;
-
     selectedProduct = productsData[handle];
     modalImage.src = selectedProduct.featured_image;
     modalImage.alt = selectedProduct.title;
     modalName.textContent = selectedProduct.title;
-
     if (selectedProduct.variants.length > 0) {
       modalPrice.textContent = `$${(selectedProduct.variants[0].price || '0.00')}`;
     } else {
       modalPrice.textContent = '';
     }
-
-    modalDesc.textContent = selectedProduct.description;
+    modalDesc.innerHTML = selectedProduct.description;
 
     modalVariants.innerHTML = '';
     selectedSize = null;
@@ -441,11 +443,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function updateSelectedVariant() {
     if (!selectedProduct) return;
-
     const variant = selectedProduct.variants.find(v => {
       return v.option1 === getSelectedColor() && (selectedSize ? v.option2 === selectedSize : true);
     });
-
     if (variant) selectedVariantId = variant.id;
   }
 
@@ -464,13 +464,10 @@ document.addEventListener('DOMContentLoaded', function () {
       alert('Please select a color and size.');
       return;
     }
-
     addToCart(selectedVariantId).then(() => {
       const selectedVariant = selectedProduct.variants.find(v => v.id === selectedVariantId);
-
       if (selectedVariant.option1 === 'Black' && selectedVariant.option2 === 'Medium') {
         const softWinterJacketHandle = 'soft-winter-jacket';
-
         fetch(`/products/${softWinterJacketHandle}.js`)
           .then(res => res.json())
           .then(product => {
@@ -481,7 +478,6 @@ document.addEventListener('DOMContentLoaded', function () {
           .catch(err => console.error(err));
       }
     }).catch(err => console.error(err));
-
     closeModal();
   });
 

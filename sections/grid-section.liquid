@@ -130,58 +130,41 @@
 
 .variant-options {
   display: flex;
-  gap: 0;
-  justify-content: stretch;
+  gap: 8px;
   margin-bottom: 16px;
 }
 
 .variant-button {
-  flex: 1 1 0;
-  padding: 14px 0;
-  font-size: 18px;
+  flex: 1;
+  padding: 12px 0;
+  font-size: 16px;
   font-weight: 700;
   border: 2px solid #222;
   background-color: #fff;
   color: #222;
   text-align: center;
   cursor: pointer;
-  margin-right: -2px;
   border-radius: 0;
   transition: all 0.18s ease;
-  outline: none;
-  user-select: none;
 }
 
-.variant-button:last-child {
-  margin-right: 0;
-}
-
-.variant-button.active,
-.variant-button:focus,
-.variant-button:active {
+.variant-button.active {
   background-color: #222;
   color: #fff;
-  border-color: #222;
 }
 
 .size-select {
   width: 100%;
-  padding: 14px 12px;
+  padding: 12px;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
   border: 2px solid #222;
   background-color: #fff;
   color: #222;
   margin-bottom: 20px;
   border-radius: 0;
   appearance: none;
-  outline: none;
 }
-
-.size-select:focus {
-  border-color: #000;
-}
-
 .add-to-cart-btn {
   display: block;
   width: 100%;
@@ -193,9 +176,7 @@
   border-radius: 2px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.25s ease;
 }
-
 .add-to-cart-btn:hover {
   background-color: #222;
 }
@@ -211,53 +192,27 @@
 <section class="grid-section">
   <h2 class="section-title">Tisso vison in the wild</h2>
   <div class="product-grid">
-    {% if product_1 %}
-      <div class="product-item" data-product-handle="{{ product_1.handle }}">
-        <img src="{{ product_1.featured_image | img_url: 'medium' }}" alt="{{ product_1.title }}">
-        <div class="plus-icon">+</div>
-      </div>
-    {% endif %}
-    {% if product_2 %}
-      <div class="product-item" data-product-handle="{{ product_2.handle }}">
-        <img src="{{ product_2.featured_image | img_url: 'medium' }}" alt="{{ product_2.title }}">
-        <div class="plus-icon">+</div>
-      </div>
-    {% endif %}
-    {% if product_3 %}
-      <div class="product-item" data-product-handle="{{ product_3.handle }}">
-        <img src="{{ product_3.featured_image | img_url: 'medium' }}" alt="{{ product_3.title }}">
-        <div class="plus-icon">+</div>
-      </div>
-    {% endif %}
-    {% if product_4 %}
-      <div class="product-item" data-product-handle="{{ product_4.handle }}">
-        <img src="{{ product_4.featured_image | img_url: 'medium' }}" alt="{{ product_4.title }}">
-        <div class="plus-icon">+</div>
-      </div>
-    {% endif %}
-    {% if product_5 %}
-      <div class="product-item" data-product-handle="{{ product_5.handle }}">
-        <img src="{{ product_5.featured_image | img_url: 'medium' }}" alt="{{ product_5.title }}">
-        <div class="plus-icon">+</div>
-      </div>
-    {% endif %}
-    {% if product_6 %}
-      <div class="product-item" data-product-handle="{{ product_6.handle }}">
-        <img src="{{ product_6.featured_image | img_url: 'medium' }}" alt="{{ product_6.title }}">
-        <div class="plus-icon">+</div>
-      </div>
-    {% endif %}
+    {% for p in (1..6) %}
+      {% assign product_var = 'product_' | append: p %}
+      {% assign product = all_products[section.settings[product_var]] %}
+      {% if product %}
+        <div class="product-item" data-product-handle="{{ product.handle }}">
+          <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+          <div class="plus-icon">+</div>
+        </div>
+      {% endif %}
+    {% endfor %}
   </div>
 
-  <div id="product-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="modal" role="document">
-      <button id="modal-close" class="modal-close" aria-label="Close modal">&times;</button>
+  <div id="product-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal">
+      <button id="modal-close" class="modal-close">&times;</button>
       <img id="modal-image" src="" alt="">
       <div class="product-name" id="modal-name"></div>
       <div class="product-price" id="modal-price"></div>
       <div class="product-desc" id="modal-desc"></div>
       <div class="variant-options" id="color-options"></div>
-      <select id="size-select" class="size-select" aria-label="Select size">
+      <select id="size-select" class="size-select">
         <option value="" disabled selected>Choose your size</option>
       </select>
       <button id="add-to-cart" class="add-to-cart-btn">ADD TO CART →</button>
@@ -267,129 +222,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const productsData = {
-    {% if product_1 %}
-    "{{ product_1.handle }}": {
-      id: {{ product_1.id }},
-      title: "{{ product_1.title | escape }}",
-      description: {{ product_1.description | strip_newlines | json }},
-      featured_image: "{{ product_1.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_1.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_2 or product_3 or product_4 or product_5 or product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_2 %}
-    "{{ product_2.handle }}": {
-      id: {{ product_2.id }},
-      title: "{{ product_2.title | escape }}",
-      description: {{ product_2.description | strip_newlines | json }},
-      featured_image: "{{ product_2.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_2.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_3 or product_4 or product_5 or product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_3 %}
-    "{{ product_3.handle }}": {
-      id: {{ product_3.id }},
-      title: "{{ product_3.title | escape }}",
-      description: {{ product_3.description | strip_newlines | json }},
-      featured_image: "{{ product_3.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_3.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_4 or product_5 or product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_4 %}
-    "{{ product_4.handle }}": {
-      id: {{ product_4.id }},
-      title: "{{ product_4.title | escape }}",
-      description: {{ product_4.description | strip_newlines | json }},
-      featured_image: "{{ product_4.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_4.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_5 or product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_5 %}
-    "{{ product_5.handle }}": {
-      id: {{ product_5.id }},
-      title: "{{ product_5.title | escape }}",
-      description: {{ product_5.description | strip_newlines | json }},
-      featured_image: "{{ product_5.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_5.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_6 %}
-    "{{ product_6.handle }}": {
-      id: {{ product_6.id }},
-      title: "{{ product_6.title | escape }}",
-      description: {{ product_6.description | strip_newlines | json }},
-      featured_image: "{{ product_6.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_6.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }
-    {% endif %}
-  };
-
   const modal = document.getElementById('product-modal');
   const modalImage = document.getElementById('modal-image');
   const modalName = document.getElementById('modal-name');
@@ -398,106 +230,86 @@ document.addEventListener('DOMContentLoaded', () => {
   const colorOptions = document.getElementById('color-options');
   const sizeSelect = document.getElementById('size-select');
   const addToCartBtn = document.getElementById('add-to-cart');
-
   let selectedProduct = null;
   let selectedColor = null;
   let selectedSize = null;
   let selectedVariantId = null;
 
-  document.querySelector('.product-grid').addEventListener('click', event => {
-    const plusIcon = event.target.closest('.plus-icon');
-    if (plusIcon) {
-      const productItem = plusIcon.closest('.product-item');
-      const handle = productItem?.dataset.productHandle;
-      if (handle) openModal(handle);
+  document.querySelector('.product-grid').addEventListener('click', e => {
+    if (e.target.closest('.plus-icon')) {
+      const handle = e.target.closest('.product-item').dataset.productHandle;
+      fetch(`/products/${handle}.js`)
+        .then(r => r.json())
+        .then(product => openModal(product));
     }
-  });
-
-  addToCartBtn.addEventListener('click', () => {
-    if (!selectedVariantId) {
-      alert('Please select both color and size.');
-      return;
-    }
-    addToCart(selectedVariantId).then(closeModal).catch(console.error);
   });
 
   document.getElementById('modal-close').addEventListener('click', closeModal);
 
-  function openModal(handle) {
-    if (!productsData[handle]) return;
-    selectedProduct = productsData[handle];
+  addToCartBtn.addEventListener('click', () => {
+    if (!selectedVariantId) {
+      alert('Please select color and size.');
+      return;
+    }
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: selectedVariantId, quantity: 1 })
+    }).then(() => closeModal());
+  });
 
-    modalImage.src = selectedProduct.featured_image;
-    modalImage.alt = selectedProduct.title;
-    modalName.textContent = selectedProduct.title;
-    modalPrice.textContent = selectedProduct.variants.length
-      ? `$${(selectedProduct.variants[0].price || '0.00')}`
-      : '';
-    modalDesc.innerHTML = selectedProduct.description;
+  function openModal(product) {
+    selectedProduct = product;
+    modalImage.src = product.featured_image;
+    modalName.textContent = product.title;
+    modalPrice.textContent = Shopify.formatMoney(product.price);
+    modalDesc.innerHTML = product.description;
 
-    const colors = Array.from(
-      new Set(selectedProduct.variants.map(v => v.option1).filter(Boolean))
-    );
+    // Render colors as buttons
+    const colors = [...new Set(product.variants.map(v => v.option1).filter(Boolean))];
     colorOptions.innerHTML = '';
-    
     colors.forEach(color => {
-      const button = document.createElement('button');
-      button.className = 'variant-button';
-      button.textContent = color;
-      button.onclick = () => {
+      const btn = document.createElement('button');
+      btn.className = 'variant-button';
+      btn.textContent = color;
+      btn.onclick = () => {
         selectedColor = color;
-        Array.from(colorOptions.children).forEach(b =>
-          b.classList.toggle('active', b.textContent === color)
-        );
+        [...colorOptions.children].forEach(b => b.classList.toggle('active', b === btn));
         updateSizeDropdown();
-        updateSelectedVariant();
       };
-      colorOptions.appendChild(button);
+      colorOptions.appendChild(btn);
     });
 
-    if (colors.length > 0) {
-      selectedColor = colors[0];
-      colorOptions.children[0].classList.add('active');
-    }
-    
-    function updateSizeDropdown() {
-      const sizes = Array.from(
-        new Set(
-          selectedProduct.variants
-            .filter(v => v.option1 === selectedColor)
-            .map(v => v.option2)
-            .filter(Boolean)
-        )
-      );
-
-      sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
-
-      sizes.forEach(size => {
-        const option = document.createElement('option');
-        option.value = size;
-        option.textContent = size;
-        sizeSelect.appendChild(option);
-      });
-
-      selectedSize = null;
-    }
-
+    // Reset size dropdown
+    sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
     sizeSelect.onchange = e => {
       selectedSize = e.target.value;
       updateSelectedVariant();
     };
 
-    updateSizeDropdown();
-
-    selectedVariantId = null;
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
   }
 
+  function updateSizeDropdown() {
+    if (!selectedColor) return;
+    const sizes = [...new Set(
+      selectedProduct.variants.filter(v => v.option1 === selectedColor).map(v => v.option2).filter(Boolean)
+    )];
+    sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
+    sizes.forEach(size => {
+      const opt = document.createElement('option');
+      opt.value = size;
+      opt.textContent = size;
+      sizeSelect.appendChild(opt);
+    });
+    selectedSize = null;
+    selectedVariantId = null;
+  }
+
   function updateSelectedVariant() {
-    if (!selectedProduct) return;
-    const variant = selectedProduct.variants.find(
-      v => v.option1 === selectedColor && v.option2 === selectedSize
+    const variant = selectedProduct.variants.find(v =>
+      v.option1 === selectedColor && v.option2 === selectedSize
     );
     selectedVariantId = variant ? variant.id : null;
   }
@@ -505,17 +317,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeModal() {
     modal.style.display = 'none';
     modal.setAttribute('aria-hidden', 'true');
-  }
-
-  function addToCart(variantId) {
-    return fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: variantId, quantity: 1 }),
-    }).then(response => {
-      if (!response.ok) throw new Error('Failed to add to cart');
-      return response.json();
-    });
   }
 });
 </script>

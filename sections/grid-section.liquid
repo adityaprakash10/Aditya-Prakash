@@ -46,29 +46,33 @@
 }
 .grid-section .plus-icon {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 42px;
-  height: 42px;
-  background: #fff;
-  border: 3px solid #161616;
+  top: 22px;
+  right: 22px;
+  width: 48px;
+  height: 48px;
+  background: #F4F4F4;
+  border: 2.5px solid #232323;
   border-radius: 50%;
-  font-size: 28px;
-  font-weight: 700;
-  color: #161616;
+  font-size: 30px;
+  font-weight: bold;
+  color: #232323;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 12px 0 rgba(0,0,0,0.13);
+  box-shadow: 0 4px 16px 0 rgba(0,0,0,0.16);
+  line-height: 1;
   cursor: pointer;
-  transition: background 0.18s, color 0.18s, border 0.2s;
+  transition: background 0.18s, color 0.18s, border 0.18s;
   z-index: 2;
+  user-select: none;
 }
+
 .grid-section .product-item:hover .plus-icon {
-  background: #222;
+  background: #232323;
   color: #fff;
-  border-color: #222;
+  border-color: #232323;
 }
+
 .modal-overlay {
   position: fixed;
   display: none;

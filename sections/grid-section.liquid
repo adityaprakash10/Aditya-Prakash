@@ -13,6 +13,49 @@
 }
 {% endschema %}
 
+<div class="grid-section">
+  <h2 class="section-title">Tisso vison in the wild</h2>
+
+  <div class="product-grid">
+    {% for p in (1..6) %}
+      {% assign product_var = 'product_' | append: p %}
+      {% assign prod_handle = section.settings[product_var] %}
+      {% if prod_handle != blank %}
+        {% assign product = all_products[prod_handle] %}
+        {% if product %}
+          <div class="product-item" data-product-handle="{{ product.handle }}">
+            <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+            <div class="plus-icon">+</div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Popup Modal -->
+<div id="product-popup" class="product-popup">
+  <div class="popup-content">
+    <span class="close-btn">&times;</span>
+    <div class="popup-body">
+      <img id="popup-image" src="" alt="">
+      <div class="popup-details">
+        <h3 id="popup-title"></h3>
+        <p id="popup-price"></p>
+
+        <!-- Color options (outside dropdown) -->
+        <div class="color-options"></div>
+
+        <!-- Size options (inside dropdown) -->
+        <label for="size-select">Size:</label>
+        <select id="size-select"></select>
+
+        <button id="add-to-cart">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% stylesheet %}
 .grid-section {
   padding: 40px 20px;
@@ -52,271 +95,139 @@
   background: #f4f4f4;
   border: 2.5px solid #232323;
   border-radius: 50%;
-  font-size: 30px;
-  font-weight: 700;
-  color: #232323;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.16);
-  user-select: none;
-  cursor: pointer;
-  transition: background 0.18s, color 0.18s, border 0.18s;
-  z-index: 10;
-}
-.grid-section .product-item:hover .plus-icon {
-  background: #232323;
-  color: #fff;
-  border-color: #232323;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal {
-  background: white;
-  width: 90%;
-  max-width: 420px;
-  border-radius: 8px;
-  padding: 24px;
-  position: relative;
-  font-family: 'Inter', sans-serif;
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  font-size: 22px;
-  font-weight: 700;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  line-height: 1;
-}
-
-.modal img {
-  width: 100%;
-  max-height: 220px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 18px;
-}
-
-.modal .product-name {
-  font-weight: 700;
-  font-size: 24px;
-  margin-bottom: 6px;
-}
-
-.modal .product-price {
-  font-weight: 600;
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.modal .product-desc {
-  font-size: 16px;
-  color: #282828;
-  margin-bottom: 18px;
-}
-
-.variant-options {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.variant-button {
-  flex: 1;
-  padding: 12px 0;
-  font-size: 16px;
-  font-weight: 700;
-  border: 2px solid #222;
-  background-color: #fff;
-  color: #222;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 42px;
   text-align: center;
   cursor: pointer;
-  border-radius: 0;
-  transition: all 0.18s ease;
 }
-
-.variant-button.active {
-  background-color: #222;
-  color: #fff;
-}
-
-.size-select {
+.product-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 12px;
-  font-weight: 700;
-  font-size: 16px;
-  border: 2px solid #222;
-  background-color: #fff;
-  color: #222;
-  margin-bottom: 20px;
-  border-radius: 0;
-  appearance: none;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
-.add-to-cart-btn {
-  display: block;
+.popup-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
   width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  font-weight: 700;
-  background-color: #000;
-  color: #fff;
-  border-radius: 2px;
-  border: none;
+  display: flex;
+  gap: 20px;
+  position: relative;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  font-size: 28px;
   cursor: pointer;
 }
-.add-to-cart-btn:hover {
-  background-color: #222;
+.popup-body {
+  display: flex;
+  gap: 20px;
+}
+.popup-body img {
+  max-width: 300px;
+  border-radius: 6px;
+}
+.popup-details {
+  flex: 1;
+}
+.color-options {
+  margin: 15px 0;
+}
+.color-options button {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  margin-right: 8px;
+  cursor: pointer;
+}
+#size-select {
+  margin: 10px 0 20px;
+  padding: 6px;
+}
+#add-to-cart {
+  background: #232323;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 {% endstylesheet %}
 
-{%- assign product_1 = all_products[section.settings.product_1] -%}
-{%- assign product_2 = all_products[section.settings.product_2] -%}
-{%- assign product_3 = all_products[section.settings.product_3] -%}
-{%- assign product_4 = all_products[section.settings.product_4] -%}
-{%- assign product_5 = all_products[section.settings.product_5] -%}
-{%- assign product_6 = all_products[section.settings.product_6] -%}
-
-<section class="grid-section">
-  <h2 class="section-title">Tisso vison in the wild</h2>
-  <div class="product-grid">
-    {% for p in (1..6) %}
-      {% assign product_var = 'product_' | append: p %}
-      {% assign product = all_products[section.settings[product_var]] %}
-      {% if product %}
-        <div class="product-item" data-product-handle="{{ product.handle }}">
-          <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-          <div class="plus-icon">+</div>
-        </div>
-      {% endif %}
-    {% endfor %}
-  </div>
-
-  <div id="product-modal" class="modal-overlay" aria-hidden="true">
-    <div class="modal">
-      <button id="modal-close" class="modal-close">&times;</button>
-      <img id="modal-image" src="" alt="">
-      <div class="product-name" id="modal-name"></div>
-      <div class="product-price" id="modal-price"></div>
-      <div class="product-desc" id="modal-desc"></div>
-      <div class="variant-options" id="color-options"></div>
-      <select id="size-select" class="size-select">
-        <option value="" disabled selected>Choose your size</option>
-      </select>
-      <button id="add-to-cart" class="add-to-cart-btn">ADD TO CART →</button>
-    </div>
-  </div>
-</section>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('product-modal');
-  const modalImage = document.getElementById('modal-image');
-  const modalName = document.getElementById('modal-name');
-  const modalPrice = document.getElementById('modal-price');
-  const modalDesc = document.getElementById('modal-desc');
-  const colorOptions = document.getElementById('color-options');
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  const plusIcons = document.querySelectorAll('.plus-icon');
+  const popup = document.getElementById('product-popup');
+  const closeBtn = document.querySelector('.close-btn');
+  const popupImage = document.getElementById('popup-image');
+  const popupTitle = document.getElementById('popup-title');
+  const popupPrice = document.getElementById('popup-price');
+  const colorOptions = document.querySelector('.color-options');
   const sizeSelect = document.getElementById('size-select');
-  const addToCartBtn = document.getElementById('add-to-cart');
-  let selectedProduct = null;
-  let selectedColor = null;
-  let selectedSize = null;
-  let selectedVariantId = null;
 
-  document.querySelector('.product-grid').addEventListener('click', e => {
-    if (e.target.closest('.plus-icon')) {
-      const handle = e.target.closest('.product-item').dataset.productHandle;
-      fetch(`/products/${handle}.js`)
-        .then(r => r.json())
-        .then(product => openModal(product));
-    }
+  plusIcons.forEach(icon => {
+    icon.addEventListener('click', async function() {
+      const handle = this.closest('.product-item').dataset.productHandle;
+      if (!handle) return;
+
+      try {
+        const response = await fetch(`/products/${handle}.js`);
+        const product = await response.json();
+
+        popupImage.src = product.featured_image;
+        popupTitle.textContent = product.title;
+        popupPrice.textContent = Shopify.formatMoney(product.price);
+
+        // Reset options
+        colorOptions.innerHTML = '';
+        sizeSelect.innerHTML = '';
+
+        // Group options
+        product.options.forEach((option, index) => {
+          if (option.name.toLowerCase().includes('color')) {
+            option.values.forEach(value => {
+              const btn = document.createElement('button');
+              btn.style.background = value.toLowerCase();
+              btn.title = value;
+              colorOptions.appendChild(btn);
+            });
+          } else if (option.name.toLowerCase().includes('size')) {
+            option.values.forEach(value => {
+              const opt = document.createElement('option');
+              opt.value = value;
+              opt.textContent = value;
+              sizeSelect.appendChild(opt);
+            });
+          }
+        });
+
+        popup.style.display = 'flex';
+      } catch (err) {
+        console.error('Error loading product:', err);
+      }
+    });
   });
 
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-
-  addToCartBtn.addEventListener('click', () => {
-    if (!selectedVariantId) {
-      alert('Please select color and size.');
-      return;
-    }
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: selectedVariantId, quantity: 1 })
-    }).then(() => closeModal());
+  closeBtn.addEventListener('click', () => {
+    popup.style.display = 'none';
   });
 
-  function openModal(product) {
-    selectedProduct = product;
-    modalImage.src = product.featured_image;
-    modalName.textContent = product.title;
-    modalPrice.textContent = Shopify.formatMoney(product.price);
-    modalDesc.innerHTML = product.description;
-
-    // Render colors as buttons
-    const colors = [...new Set(product.variants.map(v => v.option1).filter(Boolean))];
-    colorOptions.innerHTML = '';
-    colors.forEach(color => {
-      const btn = document.createElement('button');
-      btn.className = 'variant-button';
-      btn.textContent = color;
-      btn.onclick = () => {
-        selectedColor = color;
-        [...colorOptions.children].forEach(b => b.classList.toggle('active', b === btn));
-        updateSizeDropdown();
-      };
-      colorOptions.appendChild(btn);
-    });
-
-    // Reset size dropdown
-    sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
-    sizeSelect.onchange = e => {
-      selectedSize = e.target.value;
-      updateSelectedVariant();
-    };
-
-    modal.style.display = 'flex';
-    modal.setAttribute('aria-hidden', 'false');
-  }
-
-  function updateSizeDropdown() {
-    if (!selectedColor) return;
-    const sizes = [...new Set(
-      selectedProduct.variants.filter(v => v.option1 === selectedColor).map(v => v.option2).filter(Boolean)
-    )];
-    sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
-    sizes.forEach(size => {
-      const opt = document.createElement('option');
-      opt.value = size;
-      opt.textContent = size;
-      sizeSelect.appendChild(opt);
-    });
-    selectedSize = null;
-    selectedVariantId = null;
-  }
-
-  function updateSelectedVariant() {
-    const variant = selectedProduct.variants.find(v =>
-      v.option1 === selectedColor && v.option2 === selectedSize
-    );
-    selectedVariantId = variant ? variant.id : null;
-  }
-
-  function closeModal() {
-    modal.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
-  }
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) {
+      popup.style.display = 'none';
+    }
+  });
 });
-</script>
+{% endjavascript %}

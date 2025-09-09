@@ -1,0 +1,134 @@
+{% schema %}
+{
+  "name": "Banner Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "TISSO VISON"
+    },
+    {
+      "type": "text",
+      "id": "header_tagline",
+      "label": "Header Tagline",
+      "default": "Find the ideal gift for your loved ones."
+    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Main Title",
+      "default": "The Gift Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
+    },
+    {
+      "type": "text",
+      "id": "footer_note",
+      "label": "Footer Note",
+      "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button Link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [{
+    "name": "Banner Section"
+  }]
+}
+{% endschema %}
+
+{% stylesheet %}
+.banner-section {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #fff;
+  position: relative;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+.banner-section .logo-text {
+  font-weight: bold;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.banner-section .header-tagline {
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+.banner-section .main-title {
+  font-weight: 700;
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+.banner-section .description {
+  font-size: 16px;
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  line-height: 1.5;
+}
+.banner-section .shop-button {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 14px 40px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+.banner-section .shop-button:hover {
+  background-color: #222;
+}
+.banner-section .shop-button .arrow {
+  display: inline-block;
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+.banner-section .shop-button:hover .arrow {
+  transform: translateX(6px);
+}
+.banner-section .footer-note {
+  margin-top: 50px;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #cc0000;
+}
+
+@media (max-width: 768px) {
+  .banner-section .main-title {
+    font-size: 32px;
+  }
+  .banner-section .description {
+    font-size: 14px;
+    padding: 0 10px;
+  }
+}
+{% endstylesheet %}
+
+<div class="banner-section">
+  <div class="logo-text">{{ section.settings.logo_text }}</div>
+  <div class="header-tagline">{{ section.settings.header_tagline }}</div>
+  <div class="main-title">{{ section.settings.main_title }}</div>
+  <div class="description">{{ section.settings.description }}</div>
+  <a href="{{ section.settings.button_url }}" class="shop-button" role="button" tabindex="0">
+    {{ section.settings.button_text }}
+    <span class="arrow">→</span>
+  </a>
+  <div class="footer-note">{{ section.settings.footer_note }}</div>
+</div>

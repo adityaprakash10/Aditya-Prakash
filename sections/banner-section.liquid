@@ -2,133 +2,167 @@
 {
   "name": "Banner Section",
   "settings": [
-    {
-      "type": "text",
-      "id": "logo_text",
-      "label": "Logo Text",
-      "default": "TISSO VISON"
-    },
-    {
-      "type": "text",
-      "id": "header_tagline",
-      "label": "Header Tagline",
-      "default": "Find the ideal gift for your loved ones."
-    },
-    {
-      "type": "text",
-      "id": "main_title",
-      "label": "Main Title",
-      "default": "The Gift Guide"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
-    },
-    {
-      "type": "text",
-      "id": "footer_note",
-      "label": "Footer Note",
-      "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL"
-    },
-    {
-      "type": "text",
-      "id": "button_text",
-      "label": "Button Text",
-      "default": "SHOP NOW"
-    },
-    {
-      "type": "url",
-      "id": "button_url",
-      "label": "Button Link",
-      "default": "/collections/all"
-    }
+    { "type": "text", "id": "logo_text", "label": "Logo Text", "default": "TISSO VISON" },
+    { "type": "text", "id": "header_tagline", "label": "Header Tagline", "default": "Find the ideal gift for your loved ones." },
+    { "type": "text", "id": "main_title", "label": "Main Title", "default": "The Gift Guide" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
+    { "type": "text", "id": "button_text", "label": "Button Text", "default": "CHOOSE GIFT" },
+    { "type": "url", "id": "button_url", "label": "Button Link", "default": "/collections/all" },
+    { "type": "image_picker", "id": "background_svg", "label": "Background SVG", "default": "" }
   ],
-  "presets": [{
-    "name": "Banner Section"
-  }]
+  "presets": [ { "name": "Banner Section" } ]
 }
 {% endschema %}
 
 {% stylesheet %}
 .banner-section {
+  position: relative;
+  padding: 120px 40px 80px;
   text-align: center;
-  padding: 60px 20px;
-  background-color: #fff;
-  position: relative;
+  font-family: 'Inter', sans-serif;
   overflow: hidden;
-  font-family: Arial, sans-serif;
+  background: #fff;
 }
+
+.banner-section .banner-bg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+.banner-section .banner-bg img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
 .banner-section .logo-text {
-  font-weight: bold;
-  font-size: 24px;
-  letter-spacing: 0.08em;
-  margin-bottom: 10px;
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  font-weight: 600;
+  font-size: 32px;
+  letter-spacing: 0.12em;
+  z-index: 3;
+  color: black;
 }
+
 .banner-section .header-tagline {
-  font-size: 14px;
-  margin-bottom: 30px;
+  position: absolute;
+  left: 50%;
+  top: 55px;
+  transform: translateX(-50%);
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  color: black;
+  z-index: 3;
 }
-.banner-section .main-title {
-  font-weight: 700;
-  font-size: 48px;
-  margin-bottom: 20px;
-}
-.banner-section .description {
-  font-size: 16px;
-  max-width: 600px;
-  margin: 0 auto 40px auto;
-  line-height: 1.5;
-}
+
 .banner-section .shop-button {
-  background-color: #000;
-  color: #fff;
+  position: absolute;
+  right: 40px;
+  top: 40px;
+  background-color: #ffe500;
+  color: #282828;
+  font-weight: 700;
   border: none;
-  padding: 14px 40px;
-  font-size: 16px;
+  padding: 16px 40px;
+  font-size: 18px;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  z-index: 3;
+  text-decoration: none;
 }
+
 .banner-section .shop-button:hover {
-  background-color: #222;
+  background-color: #f0d600;
+  color: #181818;
 }
+
 .banner-section .shop-button .arrow {
-  display: inline-block;
-  margin-left: 8px;
+  font-size: 20px;
   transition: transform 0.3s ease;
 }
+
 .banner-section .shop-button:hover .arrow {
   transform: translateX(6px);
 }
+
+.banner-section .main-title {
+  font-weight: 700;
+  font-size: 72px;
+  margin: 0 auto 30px;
+  max-width: 600px;
+  color: black;
+  z-index: 3;
+  position: relative;
+}
+
+.banner-section .description {
+  max-width: 550px;
+  margin: 0 auto 60px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgb(80, 80, 80);
+  position: relative;
+  z-index: 3;
+}
+
 .banner-section .footer-note {
-  margin-top: 50px;
-  font-size: 10px;
   text-transform: uppercase;
-  color: #cc0000;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #990000;
+  position: relative;
+  z-index: 3;
 }
 
 @media (max-width: 768px) {
+  .banner-section {
+    padding: 80px 20px 40px;
+  }
   .banner-section .main-title {
-    font-size: 32px;
+    font-size: 42px;
   }
   .banner-section .description {
-    font-size: 14px;
-    padding: 0 10px;
+    font-size: 16px;
+  }
+  .banner-section .logo-text,
+  .banner-section .header-tagline,
+  .banner-section .shop-button {
+    position: static;
+    display: block;
+    margin: 0 auto 10px;
+    text-align: center;
+  }
+  .banner-section .shop-button {
+    margin-bottom: 30px;
   }
 }
 {% endstylesheet %}
 
 <div class="banner-section">
+  {% if section.settings.background_svg != blank %}
+  <div class="banner-bg">
+    <img src="{{ section.settings.background_svg | img_url: '2048x2048' }}" alt="Banner Background"/>
+  </div>
+  {% endif %}
   <div class="logo-text">{{ section.settings.logo_text }}</div>
   <div class="header-tagline">{{ section.settings.header_tagline }}</div>
-  <div class="main-title">{{ section.settings.main_title }}</div>
-  <div class="description">{{ section.settings.description }}</div>
   <a href="{{ section.settings.button_url }}" class="shop-button" role="button" tabindex="0">
     {{ section.settings.button_text }}
     <span class="arrow">→</span>
   </a>
-  <div class="footer-note">{{ section.settings.footer_note }}</div>
+  <h1 class="main-title">{{ section.settings.main_title }}</h1>
+  <p class="description">{{ section.settings.description }}</p>
+  <div class="footer-note">SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL</div>
 </div>

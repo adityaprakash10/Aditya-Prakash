@@ -8,520 +8,212 @@
     { "type": "product", "id": "product_4", "label": "Select Product 4" },
     { "type": "product", "id": "product_5", "label": "Select Product 5" },
     { "type": "product", "id": "product_6", "label": "Select Product 6" }
-  ],
-  "presets": [{ "name": "Grid Section" }]
+  ]
 }
 {% endschema %}
 
-{% stylesheet %}
+<div class="grid-section">
+  {% for i in (1..6) %}
+    {% assign product_key = 'product_' | append: i %}
+    {% assign product_handle = section.settings[product_key] %}
+    {% if product_handle != blank %}
+      {% assign product = all_products[product_handle] %}
+      <div class="grid-item">
+        <img src="{{ product.featured_image | img_url: '400x' }}" alt="{{ product.title }}">
+        <div class="grid-item-overlay">
+          <button class="open-modal-btn" data-product-handle="{{ product.handle }}">+</button>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<!-- Modal -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <img id="modalImage" src="" alt="">
+    <h2 id="modalName"></h2>
+    <p id="modalDesc"></p>
+
+    <!-- Color options (buttons) -->
+    <div id="colorOptions" class="color-options"></div>
+
+    <!-- Size dropdown -->
+    <select id="sizeSelect">
+      <option value="" disabled selected>Choose your size</option>
+    </select>
+
+    <!-- Add to cart -->
+    <button id="addToCartBtn">Add to Cart</button>
+  </div>
+</div>
+
+<style>
 .grid-section {
-  padding: 40px 20px;
-  max-width: 1200px;
-  margin: auto;
-}
-.grid-section .section-title {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 30px;
-  padding-left: 10px;
-  text-align: left;
-}
-.grid-section .product-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+  gap: 20px;
 }
-.grid-section .product-item {
-  position: relative;
-  cursor: pointer;
-  border-radius: 6px;
-  box-shadow: 0 3px 16px rgba(0,0,0,0.08);
-  overflow: hidden;
+.grid-item { position: relative; }
+.grid-item img { width: 100%; display: block; }
+.grid-item-overlay {
+  position: absolute; top: 10px; right: 10px;
 }
-.grid-section .product-item img {
-  width: 100%;
-  border-radius: 6px;
-  display: block;
+.open-modal-btn {
+  background: #000; color: #fff; border: none;
+  border-radius: 50%; width: 32px; height: 32px;
+  cursor: pointer; font-size: 20px; line-height: 32px;
 }
-.grid-section .plus-icon {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 48px;
-  height: 48px;
-  background: #f4f4f4;
-  border: 2.5px solid #232323;
-  border-radius: 50%;
-  font-size: 30px;
-  font-weight: 700;
-  color: #232323;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.16);
-  user-select: none;
-  transition: background 0.18s, border-color 0.18s, color 0.18s;
-  z-index: 10; /* ensure above image */
-  pointer-events: auto; /* explicitly clickable */
-}
-.grid-section .product-item:hover .plus-icon {
-  background: #232323;
-  color: #fff;
-  border-color: #232323;
-}
-
-.modal-overlay {
-  position: fixed;
-  display: none;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 9999;
-  align-items: center;
-  justify-content: center;
-}
-
 .modal {
-  background: white;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 420px;
-  padding: 24px;
-  position: relative;
-  font-family: 'Inter', sans-serif;
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); justify-content: center; align-items: center;
+  z-index: 9999;
 }
-
-.modal-close {
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  font-size: 22px;
-  font-weight: 700;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  line-height: 1;
+.modal-content {
+  background: #fff; padding: 20px; border-radius: 8px;
+  max-width: 500px; width: 100%; position: relative;
 }
-
-.modal img {
-  width: 100%;
-  object-fit: cover;
-  margin-bottom: 18px;
-  border-radius: 6px;
-  max-height: 220px;
+.close {
+  position: absolute; top: 10px; right: 10px;
+  cursor: pointer; font-size: 20px;
 }
-
-.modal .product-name {
-  font-weight: 700;
-  font-size: 24px;
-  margin-bottom: 6px;
-}
-
-.modal .product-price {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.modal .product-desc {
-  font-size: 16px;
-  color: #282828;
-  margin-bottom: 20px;
-}
-
-/* Color buttons outside (as in screenshot) */
-.variant-options {
-  display: flex;
-  gap: 0;
-  justify-content: stretch;
-  margin-bottom: 18px;
-}
-
+.color-options { margin: 15px 0; }
 .variant-button {
-  flex: 1 1 0;
-  padding: 14px 0;
-  border: 2px solid #222;
-  background-color: #fff;
-  color: #222;
-  font-weight: 700;
-  font-size: 18px;
-  text-align: center;
-  cursor: pointer;
-  margin-right: -2px;
-  user-select: none;
-  border-radius: 0;
-  transition: all 0.2s;
-  outline: none;
+  border: 1px solid #000; background: #fff;
+  margin: 3px; padding: 6px 10px; cursor: pointer;
 }
-
-.variant-button:last-child {
-  margin-right: 0;
+.variant-button.active { background: #000; color: #fff; }
+#sizeSelect {
+  width: 100%; padding: 8px; margin-bottom: 15px;
 }
-
-.variant-button.active {
-  background-color: #222;
-  color: #fff;
-  border-color: #222;
+#addToCartBtn {
+  background: #000; color: #fff; padding: 10px;
+  border: none; width: 100%; cursor: pointer;
 }
-
-/* Size inside dropdown (as in screenshot) */
-.size-select {
-  width: 100%;
-  padding: 14px 12px;
-  font-weight: 700;
-  font-size: 18px;
-  border: 2px solid #222;
-  background: #fff;
-  color: #222;
-  margin-bottom: 20px;
-  border-radius: 0;
-  appearance: none;
-  outline: none;
-}
-
-.size-select:focus {
-  border-color: #000;
-}
-
-.add-to-cart-btn {
-  width: 100%;
-  background-color: #000;
-  color: #fff;
-  padding: 14px;
-  font-weight: 700;
-  font-size: 18px;
-  border-radius: 2px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
-}
-
-.add-to-cart-btn:hover {
-  background-color: #222;
-}
-{% endstylesheet %}
-
-{%- assign product_1 = all_products[section.settings.product_1] -%}
-{%- assign product_2 = all_products[section.settings.product_2] -%}
-{%- assign product_3 = all_products[section.settings.product_3] -%}
-{%- assign product_4 = all_products[section.settings.product_4] -%}
-{%- assign product_5 = all_products[section.settings.product_5] -%}
-{%- assign product_6 = all_products[section.settings.product_6] -%}
-
-<section class="grid-section">
-  <h2 class="section-title">Tisso vison in the wild</h2>
-  <div class="product-grid">
-    {% if product_1 %}
-      <div class="product-item" data-product-handle="{{ product_1.handle }}">
-        <img src="{{ product_1.featured_image | img_url: 'medium' }}" alt="{{ product_1.title }}">
-        <div class="plus-icon" aria-label="Quick view {{ product_1.title }}" role="button" tabindex="0">+</div>
-      </div>
-    {% endif %}
-    {% if product_2 %}
-      <div class="product-item" data-product-handle="{{ product_2.handle }}">
-        <img src="{{ product_2.featured_image | img_url: 'medium' }}" alt="{{ product_2.title }}">
-        <div class="plus-icon" aria-label="Quick view {{ product_2.title }}" role="button" tabindex="0">+</div>
-      </div>
-    {% endif %}
-    {% if product_3 %}
-      <div class="product-item" data-product-handle="{{ product_3.handle }}">
-        <img src="{{ product_3.featured_image | img_url: 'medium' }}" alt="{{ product_3.title }}">
-        <div class="plus-icon" aria-label="Quick view {{ product_3.title }}" role="button" tabindex="0">+</div>
-      </div>
-    {% endif %}
-    {% if product_4 %}
-      <div class="product-item" data-product-handle="{{ product_4.handle }}">
-        <img src="{{ product_4.featured_image | img_url: 'medium' }}" alt="{{ product_4.title }}">
-        <div class="plus-icon" aria-label="Quick view {{ product_4.title }}" role="button" tabindex="0">+</div>
-      </div>
-    {% endif %}
-    {% if product_5 %}
-      <div class="product-item" data-product-handle="{{ product_5.handle }}">
-        <img src="{{ product_5.featured_image | img_url: 'medium' }}" alt="{{ product_5.title }}">
-        <div class="plus-icon" aria-label="Quick view {{ product_5.title }}" role="button" tabindex="0">+</div>
-      </div>
-    {% endif %}
-    {% if product_6 %}
-      <div class="product-item" data-product-handle="{{ product_6.handle }}">
-        <img src="{{ product_6.featured_image | img_url: 'medium' }}" alt="{{ product_6.title }}">
-        <div class="plus-icon" aria-label="Quick view {{ product_6.title }}" role="button" tabindex="0">+</div>
-      </div>
-    {% endif %}
-  </div>
-
-  <div id="product-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="modal" role="document">
-      <button id="modal-close" class="modal-close" aria-label="Close modal">&times;</button>
-      <img id="modal-image" src="" alt="">
-      <div class="product-name" id="modal-name"></div>
-      <div class="product-price" id="modal-price"></div>
-      <div class="product-desc" id="modal-desc"></div>
-
-      <!-- Color buttons OUTSIDE dropdown -->
-      <div class="variant-options" id="color-options"></div>
-
-      <!-- Size INSIDE dropdown -->
-      <select id="size-select" class="size-select" aria-label="Select size">
-        <option value="" disabled selected>Choose your size</option>
-      </select>
-
-      <button id="add-to-cart" class="add-to-cart-btn">ADD TO CART →</button>
-    </div>
-  </div>
-</section>
+</style>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const productsData = {
-    {% if product_1 %}
-    "{{ product_1.handle }}": {
-      id: {{ product_1.id }},
-      title: "{{ product_1.title | escape }}",
-      description: {{ product_1.description | strip_newlines | json }},
-      featured_image: "{{ product_1.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_1.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_2 or product_3 or product_4 or product_5 or product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_2 %}
-    "{{ product_2.handle }}": {
-      id: {{ product_2.id }},
-      title: "{{ product_2.title | escape }}",
-      description: {{ product_2.description | strip_newlines | json }},
-      featured_image: "{{ product_2.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_2.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_3 or product_4 or product_5 or product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_3 %}
-    "{{ product_3.handle }}": {
-      id: {{ product_3.id }},
-      title: "{{ product_3.title | escape }}",
-      description: {{ product_3.description | strip_newlines | json }},
-      featured_image: "{{ product_3.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_3.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_4 or product_5 or product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_4 %}
-    "{{ product_4.handle }}": {
-      id: {{ product_4.id }},
-      title: "{{ product_4.title | escape }}",
-      description: {{ product_4.description | strip_newlines | json }},
-      featured_image: "{{ product_4.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_4.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_5 or product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_5 %}
-    "{{ product_5.handle }}": {
-      id: {{ product_5.id }},
-      title: "{{ product_5.title | escape }}",
-      description: {{ product_5.description | strip_newlines | json }},
-      featured_image: "{{ product_5.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_5.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }{% unless product_6 %}{% else %},{% endunless %}
-    {% endif %}
-    {% if product_6 %}
-    "{{ product_6.handle }}": {
-      id: {{ product_6.id }},
-      title: "{{ product_6.title | escape }}",
-      description: {{ product_6.description | strip_newlines | json }},
-      featured_image: "{{ product_6.featured_image | img_url: 'medium' }}",
-      variants: [
-        {% for variant in product_6.variants %}
-        {
-          id: {{ variant.id }},
-          title: "{{ variant.title | escape }}",
-          option1: "{{ variant.option1 }}",
-          option2: "{{ variant.option2 }}",
-          option3: "{{ variant.option3 }}",
-          available: {{ variant.available | json }}
-        }{% unless forloop.last %},{% endunless %}
-        {% endfor %}
-      ]
-    }
-    {% endif %}
-  };
-
-  const modal = document.getElementById('product-modal');
-  const modalImage = document.getElementById('modal-image');
-  const modalName = document.getElementById('modal-name');
-  const modalPrice = document.getElementById('modal-price');
-  const modalDesc = document.getElementById('modal-desc');
-  const colorOptions = document.getElementById('color-options');
-  const sizeSelect = document.getElementById('size-select');
-  const addToCartBtn = document.getElementById('add-to-cart');
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("productModal");
+  const modalImage = document.getElementById("modalImage");
+  const modalName = document.getElementById("modalName");
+  const modalDesc = document.getElementById("modalDesc");
+  const colorOptions = document.getElementById("colorOptions");
+  const sizeSelect = document.getElementById("sizeSelect");
+  const addToCartBtn = document.getElementById("addToCartBtn");
+  const closeModal = document.querySelector(".close");
 
   let selectedProduct = null;
-  let selectedColor = null;
   let selectedSize = null;
+  let selectedColor = null;
   let selectedVariantId = null;
 
-  // ✅ Robust event delegation on the grid (handles text-node clicks too)
-  const grid = document.querySelector('.product-grid');
-  grid.addEventListener('click', (event) => {
-    let target = event.target;
-    if (target.nodeType === 3) target = target.parentElement; // if text node
-    const plusIcon = target.closest && target.closest('.plus-icon');
-    if (!plusIcon) return;
+  const productsData = {
+    {% for i in (1..6) %}
+      {% assign product_key = 'product_' | append: i %}
+      {% assign product_handle = section.settings[product_key] %}
+      {% if product_handle != blank %}
+        "{{ all_products[product_handle].handle }}": {{ all_products[product_handle] | json }},
+      {% endif %}
+    {% endfor %}
+  };
 
-    const productItem = plusIcon.closest('.product-item');
-    const handle = productItem && productItem.getAttribute('data-product-handle');
-    if (handle) openModal(handle);
+  document.querySelectorAll(".open-modal-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      openModal(btn.dataset.productHandle);
+    });
   });
 
-  addToCartBtn.addEventListener('click', () => {
-    if (!selectedVariantId) {
-      alert('Please select a color and size.');
-      return;
-    }
-    addToCart(selectedVariantId).then(closeModal).catch(console.error);
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
   });
-
-  document.getElementById('modal-close').addEventListener('click', closeModal);
 
   function openModal(handle) {
     if (!productsData.hasOwnProperty(handle)) return;
     selectedProduct = productsData[handle];
+
     modalImage.src = selectedProduct.featured_image;
     modalImage.alt = selectedProduct.title;
     modalName.textContent = selectedProduct.title;
-    // price may be undefined if not included in variants; keeping UI as-is
-    modalPrice.textContent = selectedProduct.variants.length > 0 ? '' : '';
     modalDesc.innerHTML = selectedProduct.description;
 
-    // Render color buttons (outside)
-    const colors = Array.from(new Set(selectedProduct.variants.map(v => v.option1).filter(Boolean)));
-    colorOptions.innerHTML = '';
+    colorOptions.innerHTML = "";
+    sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
+
+    const sizes = new Set();
+    const colors = new Set();
+
+    selectedProduct.variants.forEach(v => {
+      // if option looks like size
+      if (v.option1 && v.option1.match(/XS|S|M|L|XL|XXL/)) {
+        sizes.add(v.option1);
+        if (v.option2) colors.add(v.option2);
+      } else if (v.option2 && v.option2.match(/XS|S|M|L|XL|XXL/)) {
+        sizes.add(v.option2);
+        if (v.option1) colors.add(v.option1);
+      } else {
+        // fallback: treat option1 as color
+        if (v.option1) colors.add(v.option1);
+        if (v.option2) sizes.add(v.option2);
+      }
+    });
+
+    // render color buttons
     colors.forEach(color => {
-      const btn = document.createElement('button');
-      btn.className = 'variant-button';
+      const btn = document.createElement("button");
+      btn.className = "variant-button";
       btn.textContent = color;
-      btn.type = 'button';
+      btn.type = "button";
       btn.onclick = () => {
         selectedColor = color;
-        Array.from(colorOptions.children).forEach(b => b.classList.toggle('active', b.textContent === color));
-        updateSizeDropdown();
+        Array.from(colorOptions.children).forEach(b => b.classList.toggle("active", b.textContent === color));
         updateSelectedVariant();
       };
       colorOptions.appendChild(btn);
     });
 
-    if (colors.length > 0) {
-      selectedColor = colors[0];
-      colorOptions.children[0].classList.add('active');
-    } else {
-      selectedColor = null;
-    }
-
-    function updateSizeDropdown() {
-      const sizes = Array.from(new Set(selectedProduct.variants
-        .filter(v => v.option1 === selectedColor)
-        .map(v => v.option2)
-        .filter(Boolean)));
-      sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
-      sizes.forEach(size => {
-        const opt = document.createElement('option');
-        opt.value = size;
-        opt.textContent = size;
-        sizeSelect.appendChild(opt);
-      });
-      selectedSize = null;
-    }
+    // render size dropdown
+    sizes.forEach(size => {
+      const opt = document.createElement("option");
+      opt.value = size;
+      opt.textContent = size;
+      sizeSelect.appendChild(opt);
+    });
 
     sizeSelect.onchange = e => {
       selectedSize = e.target.value;
       updateSelectedVariant();
     };
 
-    updateSizeDropdown();
-
-    selectedVariantId = null;
-    modal.style.display = 'flex';
-    modal.setAttribute('aria-hidden', 'false');
+    modal.style.display = "flex";
   }
 
   function updateSelectedVariant() {
     if (!selectedProduct) return;
-    const variant = selectedProduct.variants.find(v => v.option1 === selectedColor && v.option2 === selectedSize);
+    const variant = selectedProduct.variants.find(v =>
+      (v.option1 === selectedSize && v.option2 === selectedColor) ||
+      (v.option2 === selectedSize && v.option1 === selectedColor)
+    );
     selectedVariantId = variant ? variant.id : null;
   }
 
-  function closeModal() {
-    modal.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
-  }
-
-  function addToCart(variantId) {
-    return fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: variantId, quantity: 1 })
-    }).then(response => {
-      if (!response.ok) throw new Error('Failed to add to cart');
-      return response.json();
-    });
-  }
-
-  // Optional: make + icon keyboard-accessible
-  grid.addEventListener('keydown', (e) => {
-    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('plus-icon')) {
-      e.preventDefault();
-      const handle = e.target.closest('.product-item')?.getAttribute('data-product-handle');
-      if (handle) openModal(handle);
+  addToCartBtn.addEventListener("click", () => {
+    if (!selectedVariantId) {
+      alert("Please select size and color");
+      return;
     }
+    fetch("/cart/add.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: selectedVariantId, quantity: 1 })
+    })
+    .then(res => res.json())
+    .then(() => {
+      alert("Added to cart!");
+      modal.style.display = "none";
+    })
+    .catch(() => alert("Error adding to cart"));
   });
 });
 </script>

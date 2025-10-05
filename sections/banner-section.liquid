@@ -2,7 +2,7 @@
 🎁 Pixel-Perfect Banner Section
 Built to match the target reference exactly. 
 All text areas (red boxes) are editable in the theme customizer.
-No jQuery used — fully vanilla JS compatibl.
+No jQuery used — fully vanilla JS compatible.
 {% endcomment %}
 
 <section class="banner-section">
@@ -11,8 +11,8 @@ No jQuery used — fully vanilla JS compatibl.
     <img src="{{ 'Frame.svg' | asset_url }}" alt="Frame Background" />
   </div>
 
-  <!-- Top Bar -->
-  <div class="banner-top">
+  <!-- Top Bar Elements -->
+  <div class="banner-top-wrapper">
     <div class="logo-text">{{ section.settings.logo_text }}</div>
     <div class="header-tagline">{{ section.settings.header_tagline }}</div>
     <a href="{{ section.settings.button_url }}" class="shop-button" role="button">
@@ -25,8 +25,8 @@ No jQuery used — fully vanilla JS compatibl.
   <div class="banner-content">
     <h1 class="main-title">{{ section.settings.main_title }}</h1>
     <p class="description">{{ section.settings.description }}</p>
-    <a href="{{ section.settings.button_url }}" class="shop-now-btn" role="button">
-      SHOP NOW <span class="arrow">→</span>
+    <a href="{{ section.settings.main_button_url }}" class="shop-now-btn" role="button">
+      {{ section.settings.main_button_text }} <span class="arrow">→</span>
     </a>
   </div>
 
@@ -38,12 +38,26 @@ No jQuery used — fully vanilla JS compatibl.
 {
   "name": "Banner Section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Top Bar"
+    },
     { "type": "text", "id": "logo_text", "label": "Logo Text", "default": "TISSO VISON" },
     { "type": "text", "id": "header_tagline", "label": "Header Tagline", "default": "Find the ideal gift for your loved ones." },
     { "type": "text", "id": "button_text", "label": "Top Button Text", "default": "CHOOSE GIFT" },
-    { "type": "url", "id": "button_url", "label": "Button Link", "default": "/collections/all" },
+    { "type": "url", "id": "button_url", "label": "Top Button Link" },
+    {
+      "type": "header",
+      "content": "Main Content"
+    },
     { "type": "text", "id": "main_title", "label": "Main Title", "default": "The Gift Guide" },
     { "type": "textarea", "id": "description", "label": "Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
+    { "type": "text", "id": "main_button_text", "label": "Main Button Text", "default": "SHOP NOW" },
+    { "type": "url", "id": "main_button_url", "label": "Main Button Link" },
+    {
+      "type": "header",
+      "content": "Footer"
+    },
     { "type": "text", "id": "footer_note", "label": "Footer Note", "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL" }
   ],
   "presets": [{ "name": "Banner Section" }]
@@ -53,11 +67,18 @@ No jQuery used — fully vanilla JS compatibl.
 {% stylesheet %}
 .banner-section {
   position: relative;
+  width: 100%;
+  height: 90vh; /* Using viewport height for responsiveness */
+  min-height: 700px;
+  max-height: 1080px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   overflow: hidden;
   background: #fff;
   font-family: 'Inter', sans-serif;
-  padding: 0;
+  color: #000;
 }
 
 /* Background SVG */
@@ -66,143 +87,194 @@ No jQuery used — fully vanilla JS compatibl.
   top: 0; left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: 1;
 }
 .banner-bg img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0) invert(0);
 }
 
-/* Top Navigation Bar */
-.banner-top {
+/* Positioning Wrappers */
+.banner-top-wrapper,
+.banner-content,
+.footer-note {
   position: relative;
   z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 36px 60px;
+  width: 100%;
 }
+
+/* Top Elements */
 .logo-text {
-  font-size: 26px;
+  position: absolute;
+  top: 36px;
+  left: 60px;
+  border: 2px solid #000;
+  padding: 8px 16px;
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #000;
+  letter-spacing: 0.1em;
 }
+
 .header-tagline {
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 16px;
-  color: #000;
   letter-spacing: 0.04em;
+  white-space: nowrap;
 }
+
 .shop-button {
+  position: absolute;
+  top: 36px;
+  right: 60px;
   background-color: #ffe500;
   color: #000;
   font-weight: 700;
   padding: 14px 32px;
-  border-radius: 4px;
+  border: 2px solid #000;
+  border-radius: 0;
   text-decoration: none;
   font-size: 16px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-.shop-button:hover {
-  background-color: #f0d600;
-  transform: translateY(-2px);
-}
-.shop-button .arrow {
-  transition: transform 0.3s ease;
-}
-.shop-button:hover .arrow {
-  transform: translateX(5px);
+  gap: 8px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  white-space: nowrap;
 }
 
-/* Main Content */
+/* Main Content (Centered) */
 .banner-content {
-  position: relative;
-  z-index: 2;
-  max-width: 700px;
-  margin: 100px auto;
-  text-align: center;
-  color: #000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 600px;
 }
+
 .main-title {
   font-weight: 700;
-  font-size: 72px;
-  margin-bottom: 24px;
+  font-size: 96px;
+  line-height: 1.1;
+  border: 4px solid #000;
+  padding: 10px 20px;
+  margin: 0 0 24px;
+  display: inline-block;
 }
+
 .description {
   font-size: 18px;
   line-height: 1.6;
-  color: #333;
-  margin-bottom: 36px;
+  color: #000;
+  max-width: 480px;
+  border: 2px solid #000;
+  padding: 15px;
+  margin: 0 auto 36px;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* SHOP NOW Button */
 .shop-now-btn {
   background-color: #000;
   color: #fff;
-  padding: 14px 40px;
-  border-radius: 4px;
-  font-weight: 600;
+  padding: 16px 40px;
+  border: 2px solid #000;
+  font-weight: 700;
+  font-size: 16px;
   text-decoration: none;
-  transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
-.shop-now-btn:hover {
-  background-color: #333;
-  transform: translateY(-2px);
-}
+
+/* Button Animations */
+.shop-button .arrow,
 .shop-now-btn .arrow {
   transition: transform 0.3s ease;
 }
+
+.shop-button:hover,
+.shop-now-btn:hover {
+  transform: translateY(-4px);
+}
+
+.shop-button:hover .arrow,
 .shop-now-btn:hover .arrow {
   transform: translateX(6px);
 }
 
 /* Footer Note */
 .footer-note {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 12px;
   font-weight: 500;
-  color: #900;
+  color: #c00;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding-bottom: 40px;
+  white-space: nowrap;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .banner-top {
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px;
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .main-title {
+    font-size: 72px;
+  }
+}
+
+@media (max-width: 990px) {
+  .logo-text, .shop-button {
+    left: 30px;
+    top: 20px;
+  }
+  .shop-button {
+    right: 30px;
+    left: auto;
+  }
+  .header-tagline {
+    top: 32px;
   }
   .main-title {
-    font-size: 42px;
+    font-size: 60px;
   }
   .description {
     font-size: 16px;
   }
-  .shop-now-btn {
-    font-size: 14px;
+  .footer-note {
+    bottom: 20px;
   }
+}
+
+@media (max-width: 768px) {
+  .banner-section {
+    min-height: 600px;
+    height: 80vh;
+  }
+  .header-tagline {
+    display: none; /* Hide tagline on smaller screens to avoid overlap */
+  }
+  .logo-text, .shop-button {
+    padding: 6px 12px;
+    font-size: 14px;
+    top: 15px;
+  }
+  .logo-text { left: 15px; }
+  .shop-button { right: 15px; padding: 10px 20px; }
+  .main-title { font-size: 42px; }
+  .description { max-width: 90%; }
 }
 {% endstylesheet %}
 
 {% javascript %}
+// Vanilla JS - no jQuery needed.
+// The CSS :hover pseudo-class handles the animations effectively.
+// This script is left for any future interactive needs.
 document.addEventListener('DOMContentLoaded', () => {
-  const shopBtn = document.querySelector('.shop-now-btn');
-  const chooseBtn = document.querySelector('.shop-button');
-
-  [shopBtn, chooseBtn].forEach(btn => {
-    if (!btn) return;
-    btn.addEventListener('mouseenter', () => btn.classList.add('hovering'));
-    btn.addEventListener('mouseleave', () => btn.classList.remove('hovering'));
-  });
+  console.log('Banner section loaded.');
 });
 {% endjavascript %}

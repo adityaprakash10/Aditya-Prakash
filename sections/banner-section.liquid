@@ -1,31 +1,33 @@
 {% comment %}
 🎁 Pixel-Perfect Banner Section
-Built to match the Figma design exactly.
+Built to match the Figma design exactly with a distinct top bar.
 All text areas are editable in the theme customizer.
 No jQuery used — fully vanilla JS compatible.
 {% endcomment %}
 
 <section class="banner-section">
-  <!-- Background Frame -->
-  <div class="banner-bg">
-    <img src="{{ 'Frame.svg' | asset_url }}" alt="Frame Background" />
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="logo-text">{{ section.settings.logo_text }}</div>
+    <div class="header-tagline">{{ section.settings.header_tagline }}</div>
+    <a href="{{ section.settings.button_url }}" class="shop-button" role="button">
+      {{ section.settings.button_text }}
+      <span class="arrow">→</span>
+    </a>
   </div>
 
-  <!-- Top Bar Elements -->
-  <div class="logo-text">{{ section.settings.logo_text }}</div>
-  <div class="header-tagline">{{ section.settings.header_tagline }}</div>
-  <a href="{{ section.settings.button_url }}" class="shop-button" role="button">
-    {{ section.settings.button_text }}
-    <span class="arrow">→</span>
-  </a>
-
-  <!-- Main Content -->
-  <div class="banner-content">
-    <h1 class="main-title">{{ section.settings.main_title }}</h1>
-    <p class="description">{{ section.settings.description }}</p>
-    <a href="{{ section.settings.main_button_url }}" class="shop-now-btn" role="button">
-      {{ section.settings.main_button_text }} <span class="arrow">→</span>
-    </a>
+  <!-- Main Area with Background and Content -->
+  <div class="banner-main">
+    <div class="banner-bg">
+      <img src="{{ 'Frame.svg' | asset_url }}" alt="Frame Background" />
+    </div>
+    <div class="banner-content">
+      <h1 class="main-title">{{ section.settings.main_title }}</h1>
+      <p class="description">{{ section.settings.description }}</p>
+      <a href="{{ section.settings.main_button_url }}" class="shop-now-btn" role="button">
+        {{ section.settings.main_button_text }} <span class="arrow">→</span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -56,61 +58,43 @@ No jQuery used — fully vanilla JS compatible.
 
 {% stylesheet %}
 .banner-section {
-  position: relative;
-  width: 100%;
-  height: 90vh;
-  min-height: 700px;
-  max-height: 1080px;
-  overflow: hidden;
-  background: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 800px;
+  background-color: #fff;
   font-family: 'Inter', sans-serif;
   color: #000;
 }
 
-/* Background SVG */
-.banner-bg {
-  position: absolute;
-  top: 0; left: 0;
+/* Top Bar Styling */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; /* Context for the absolutely positioned tagline */
   width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-.banner-bg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  padding: 20px 60px;
+  flex-shrink: 0; /* Prevents the bar from shrinking */
+  background-color: #fff;
+  z-index: 10;
 }
 
-/* Position all text and button elements absolutely */
-.logo-text,
-.header-tagline,
-.shop-button,
-.banner-content {
-  position: absolute;
-  z-index: 2;
-}
-
-/* Top Elements */
 .logo-text {
-  top: 40px;
-  left: 60px;
   font-size: 24px;
   font-weight: 700;
   letter-spacing: 0.1em;
 }
 
 .header-tagline {
-  top: 50px;
+  position: absolute;
   left: 50%;
   transform: translateX(-50%);
   font-size: 16px;
-  letter-spacing: 0.04em;
   white-space: nowrap;
 }
 
 .shop-button {
-  top: 40px;
-  right: 60px;
   background-color: #ffe500;
   color: #000;
   font-weight: 700;
@@ -125,16 +109,39 @@ No jQuery used — fully vanilla JS compatible.
   white-space: nowrap;
 }
 
-/* Main Content (Left-Aligned) */
+/* Main Area Styling (Image and Content) */
+.banner-main {
+  position: relative;
+  width: 100%;
+  flex-grow: 1; /* Takes up the remaining vertical space */
+  overflow: hidden;
+}
+
+.banner-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.banner-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Main Content (Positioned over the image) */
 .banner-content {
-  top: 65%; /* Position vertically towards the bottom */
-  left: 10%; /* Indent from the left */
+  position: absolute;
+  z-index: 2;
+  top: 50%; /* Position relative to the .banner-main container */
+  left: 10%;
   transform: translateY(-50%);
   width: 90%;
   max-width: 550px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align all items to the left */
+  align-items: flex-start;
   text-align: left;
   gap: 25px;
 }
@@ -184,32 +191,25 @@ No jQuery used — fully vanilla JS compatible.
 }
 
 /* Responsive Adjustments */
-@media (max-width: 1200px) {
-  .banner-content { left: 8%; }
-  .main-title { font-size: 72px; }
-  .description { max-width: 450px; }
-}
-
 @media (max-width: 990px) {
-  .logo-text { left: 30px; top: 30px; }
-  .shop-button { right: 30px; top: 30px; }
-  .header-tagline { top: 40px; }
-  .banner-content { left: 6%; top: 60%; }
-  .main-title { font-size: 60px; }
+  .top-bar { padding: 20px 30px; }
+  .main-title { font-size: 72px; }
   .description { font-size: 16px; }
+  .banner-content { left: 8%; }
 }
 
 @media (max-width: 768px) {
   .header-tagline { display: none; }
-  .logo-text { left: 20px; top: 20px; font-size: 18px; }
-  .shop-button { right: 20px; top: 20px; font-size: 14px; padding: 10px 18px; }
+  .top-bar { padding: 15px 20px; }
+  .logo-text { font-size: 18px; }
+  .shop-button { font-size: 14px; padding: 10px 18px; }
   .banner-content {
     left: 0;
     right: 0;
-    margin: 0 auto; /* Center the content block */
-    align-items: center; /* Center text inside the block */
+    margin: 0 auto;
+    align-items: center;
     text-align: center;
-    top: 55%;
+    top: 45%;
   }
   .main-title { font-size: 48px; }
   .description { max-width: 90%; }
@@ -218,8 +218,7 @@ No jQuery used — fully vanilla JS compatible.
 
 {% javascript %}
 // Vanilla JS - no jQuery needed.
-// The CSS :hover pseudo-class handles the animations effectively.
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Pixel-perfect banner section loaded.');
+  console.log('Banner with top bar loaded.');
 });
 {% endjavascript %}

@@ -1,12 +1,14 @@
 {% comment %}
-🎁 Banner Section
-Displays a hero-style banner with a background SVG, title, tagline, and button.
+🎁 Pixel-Perfect Banner Section
+Built to match the target reference exactly. 
+All text areas (red boxes) are editable in the theme customizer.
+No jQuery used — fully vanilla JS compatible.
 {% endcomment %}
 
 <section class="banner-section">
-  <!-- Background Illustration -->
+  <!-- Background Frame -->
   <div class="banner-bg">
-    <img src="{{ 'Frame.svg' | asset_url }}" alt="Background frame" />
+    <img src="{{ 'Frame.svg' | asset_url }}" alt="Frame Background" />
   </div>
 
   <!-- Top Bar -->
@@ -19,15 +21,17 @@ Displays a hero-style banner with a background SVG, title, tagline, and button.
     </a>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main Center Content -->
   <div class="banner-content">
     <h1 class="main-title">{{ section.settings.main_title }}</h1>
     <p class="description">{{ section.settings.description }}</p>
-    <a href="{{ section.settings.button_url }}" class="shop-now-btn">SHOP NOW →</a>
+    <a href="{{ section.settings.button_url }}" class="shop-now-btn" role="button">
+      SHOP NOW <span class="arrow">→</span>
+    </a>
   </div>
 
   <!-- Footer Note -->
-  <div class="footer-note">SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL</div>
+  <div class="footer-note">{{ section.settings.footer_note }}</div>
 </section>
 
 {% schema %}
@@ -36,43 +40,39 @@ Displays a hero-style banner with a background SVG, title, tagline, and button.
   "settings": [
     { "type": "text", "id": "logo_text", "label": "Logo Text", "default": "TISSO VISON" },
     { "type": "text", "id": "header_tagline", "label": "Header Tagline", "default": "Find the ideal gift for your loved ones." },
+    { "type": "text", "id": "button_text", "label": "Top Button Text", "default": "CHOOSE GIFT" },
+    { "type": "url", "id": "button_url", "label": "Button Link", "default": "/collections/all" },
     { "type": "text", "id": "main_title", "label": "Main Title", "default": "The Gift Guide" },
     { "type": "textarea", "id": "description", "label": "Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
-    { "type": "text", "id": "button_text", "label": "Top Button Text", "default": "CHOOSE GIFT" },
-    { "type": "url", "id": "button_url", "label": "Button Link", "default": "/collections/all" }
+    { "type": "text", "id": "footer_note", "label": "Footer Note", "default": "SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL" }
   ],
-  "presets": [
-    { "name": "Banner Section" }
-  ]
+  "presets": [{ "name": "Banner Section" }]
 }
 {% endschema %}
 
 {% stylesheet %}
 .banner-section {
   position: relative;
-  padding: 0;
   text-align: center;
-  font-family: 'Inter', sans-serif;
   overflow: hidden;
   background: #fff;
+  font-family: 'Inter', sans-serif;
+  padding: 0;
 }
 
-/* Background Image */
+/* Background SVG */
 .banner-bg {
   position: absolute;
   top: 0; left: 0;
   width: 100%;
   height: 100%;
   z-index: 0;
-  pointer-events: none;
-  opacity: 1; /* Full opacity for dark black look */
 }
-
 .banner-bg img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0) invert(0); /* Ensures SVG appears fully black */
+  filter: brightness(0) invert(0);
 }
 
 /* Top Navigation Bar */
@@ -82,95 +82,96 @@ Displays a hero-style banner with a background SVG, title, tagline, and button.
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 40px 60px;
-  text-align: center;
+  padding: 36px 60px;
 }
-
 .logo-text {
+  font-size: 26px;
   font-weight: 700;
-  font-size: 28px;
   letter-spacing: 0.12em;
   color: #000;
 }
-
 .header-tagline {
-  font-weight: 400;
-  font-size: 18px;
-  letter-spacing: 0.05em;
+  font-size: 16px;
   color: #000;
+  letter-spacing: 0.04em;
 }
-
 .shop-button {
   background-color: #ffe500;
   color: #000;
   font-weight: 700;
-  padding: 14px 36px;
-  font-size: 16px;
+  padding: 14px 32px;
   border-radius: 4px;
-  display: flex;
+  text-decoration: none;
+  font-size: 16px;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  text-decoration: none;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
-
 .shop-button:hover {
   background-color: #f0d600;
   transform: translateY(-2px);
 }
-
 .shop-button .arrow {
   transition: transform 0.3s ease;
 }
 .shop-button:hover .arrow {
-  transform: translateX(6px);
+  transform: translateX(5px);
 }
 
-/* Centered Main Content */
+/* Main Content */
 .banner-content {
   position: relative;
   z-index: 2;
   max-width: 700px;
-  margin: 120px auto 100px;
-  color: #000;
+  margin: 100px auto;
   text-align: center;
+  color: #000;
 }
-
 .main-title {
   font-weight: 700;
   font-size: 72px;
   margin-bottom: 24px;
 }
-
 .description {
   font-size: 18px;
-  color: #333;
-  margin-bottom: 40px;
   line-height: 1.6;
+  color: #333;
+  margin-bottom: 36px;
 }
 
+/* SHOP NOW Button */
 .shop-now-btn {
   background-color: #000;
   color: #fff;
-  padding: 14px 36px;
-  text-decoration: none;
+  padding: 14px 40px;
   border-radius: 4px;
   font-weight: 600;
+  text-decoration: none;
   transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
-
 .shop-now-btn:hover {
   background-color: #333;
+  transform: translateY(-2px);
+}
+.shop-now-btn .arrow {
+  transition: transform 0.3s ease;
+}
+.shop-now-btn:hover .arrow {
+  transform: translateX(6px);
 }
 
-/* Footer */
+/* Footer Note */
 .footer-note {
   font-size: 12px;
-  color: #990000;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  color: #900;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   padding-bottom: 40px;
 }
 
@@ -192,3 +193,16 @@ Displays a hero-style banner with a background SVG, title, tagline, and button.
   }
 }
 {% endstylesheet %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', () => {
+  const shopBtn = document.querySelector('.shop-now-btn');
+  const chooseBtn = document.querySelector('.shop-button');
+
+  [shopBtn, chooseBtn].forEach(btn => {
+    if (!btn) return;
+    btn.addEventListener('mouseenter', () => btn.classList.add('hovering'));
+    btn.addEventListener('mouseleave', () => btn.classList.remove('hovering'));
+  });
+});
+{% endjavascript %}

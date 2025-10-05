@@ -15,10 +15,12 @@
       "settings": {
         "logo_text": "TISSO VISON",
         "header_tagline": "Find the ideal gift for your loved ones.",
+        "button_text": "CHOOSE GIFT",
+        "button_url": "shopify://collections/all",
         "main_title": "The Gift Guide",
         "description": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season.",
-        "button_text": "SHOP NOW",
-        "button_url": "shopify://collections/all"
+        "main_button_text": "SHOP NOW",
+        "main_button_url": ""
       }
     },
     "grid_section_b6YNdh": {

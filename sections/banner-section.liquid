@@ -1,9 +1,9 @@
 {% comment %}
-🎁 PIXEL-PERFECT BANNER - FIXED VERSION
+🎁 FIXED VERSION
 
-* Top Bar narrowed (height + padding adjusted).
-* Banner image shorter so text sits below in white space.
-* Main Title wraps naturally instead of forcing one line.
+* Top bar is slim.
+* Banner image stays same height (50vh).
+* Text ("The Gift Guide") is placed **on top of image**, positioned left and vertically centered into the empty white area.
   {% endcomment %}
 
 <section class="banner-container">
@@ -17,16 +17,11 @@
     </a>
   </div>
 
-  <!-- 2. Image Area -->
+  <!-- 2. Image + Text Area Combined -->
 
   <div class="banner-image-area">
     <img src="{{ 'Frame.svg' | asset_url }}" alt="Frame Background" class="banner-bg-img" />
-  </div>
-
-  <!-- 3. Text Content Area -->
-
-  <div class="banner-text-area">
-    <div class="banner-content">
+    <div class="banner-text-overlay">
       <h1 class="main-title">{{ section.settings.main_title }}</h1>
       <p class="description">{{ section.settings.description }}</p>
       <a href="{{ section.settings.main_button_url }}" class="shop-now-btn" role="button">
@@ -75,13 +70,12 @@ color: #000;
 display: flex;
 justify-content: space-between;
 align-items: center;
-position: relative;
 width: 100%;
-height: 50px; /* Narrow height */
-padding: 6px 40px; /* Slim padding */
-flex-shrink: 0;
+height: 50px; /* Slim */
+padding: 6px 40px;
 background-color: #F8F8F8;
 border-bottom: 1px solid #EAEAEA;
+position: relative;
 z-index: 10;
 }
 .logo-text {
@@ -111,11 +105,12 @@ transition: transform 0.3s ease;
 white-space: nowrap;
 }
 
-/* 2. Image Area */
+/* 2. Image + Text Overlay */
 .banner-image-area {
+position: relative;
 width: 100%;
-height: 35vh; /* Reduced height */
-min-height: 300px;
+height: 50vh; /* keep original */
+min-height: 400px;
 overflow: hidden;
 }
 .banner-bg-img {
@@ -123,32 +118,25 @@ width: 100%;
 height: 100%;
 object-fit: cover;
 }
-
-/* 3. Text Content Area */
-.banner-text-area {
-width: 100%;
-padding: 5% 12%;
-background-color: #fff;
-}
-.banner-content {
-max-width: 550px;
+.banner-text-overlay {
+position: absolute;
+top: 50%;
+left: 10%; /* adjust to move text into the empty space */
+transform: translateY(-50%);
+max-width: 500px;
 display: flex;
 flex-direction: column;
-align-items: flex-start;
-text-align: left;
-gap: 25px;
+gap: 20px;
 }
 .main-title {
 font-weight: 700;
-font-size: 52px;
+font-size: 56px;
 line-height: 1.1;
 margin: 0;
-white-space: normal; /* Allow wrapping */
 }
 .description {
 font-size: 18px;
 line-height: 1.6;
-max-width: 500px;
 margin: 0;
 }
 .shop-now-btn {
@@ -165,31 +153,29 @@ gap: 8px;
 transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Animations */
+/* Hover Effects */
 .arrow { transition: transform 0.3s ease; }
 .shop-button:hover, .shop-now-btn:hover { transform: translateY(-4px); }
 .shop-button:hover .arrow, .shop-now-btn:hover .arrow { transform: translateX(6px); }
 .shop-now-btn:hover { background-color: #333; }
 
-/* Responsive Adjustments */
+/* Responsive */
 @media (max-width: 990px) {
 .top-bar { padding: 6px 20px; height: 45px; }
 .main-title { font-size: 44px; }
-.banner-text-area { padding: 5% 8%; }
 }
 @media (max-width: 768px) {
 .header-tagline { display: none; }
 .top-bar { padding: 6px 15px; height: 40px; }
 .logo-text { font-size: 16px; }
 .shop-button { font-size: 13px; padding: 8px 16px; }
-.banner-text-area { padding: 8% 5%; }
-.banner-content { align-items: center; text-align: center; }
+.banner-text-overlay { left: 5%; max-width: 90%; text-align: center; align-items: center; }
 .main-title { font-size: 38px; }
 }
 {% endstylesheet %}
 
 {% javascript %}
 document.addEventListener('DOMContentLoaded', () => {
-console.log('Corrected banner structure loaded.');
+console.log('Banner with overlay text loaded.');
 });
 {% endjavascript %}

@@ -1,8 +1,9 @@
 {% comment %}
 🎁 Pixel-Perfect Banner Section
 
-* Slimmer top nav bar (30% slimmer).
-* Forced main title ("The Gift Guide") onto a single line.
+* Top nav bar slimmed 20%.
+* "The Gift Guide" shifted.
+* Added bottom bar overlay with sustainability message (same color as top bar).
   {% endcomment %}
 
 <section class="banner-section-container">
@@ -22,13 +23,22 @@
     <div class="banner-bg">
       <img src="{{ 'Frame.svg' | asset_url }}" alt="Frame Background" />
     </div>
-    <div class="banner-content">
-      <h1 class="main-title">{{ section.settings.main_title }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
-      <a href="{{ section.settings.main_button_url }}" class="shop-now-btn" role="button">
-        {{ section.settings.main_button_text }} <span class="arrow">→</span>
-      </a>
-    </div>
+
+```
+<div class="banner-content">
+  <h1 class="main-title">{{ section.settings.main_title }}</h1>
+  <p class="description">{{ section.settings.description }}</p>
+  <a href="{{ section.settings.main_button_url }}" class="shop-now-btn" role="button">
+    {{ section.settings.main_button_text }} <span class="arrow">→</span>
+  </a>
+</div>
+
+<!-- Bottom Bar -->
+<div class="bottom-bar">
+  <p>SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL</p>
+</div>
+```
+
   </div>
 </section>
 
@@ -75,7 +85,7 @@ justify-content: space-between;
 align-items: center;
 position: relative;
 width: 100%;
-padding: 11px 34px; /* reduced by ~30% */
+padding: 11px 34px; /* 20% slimmer */
 flex-shrink: 0;
 background-color: #F8F8F8;
 border-bottom: 1px solid #EAEAEA;
@@ -83,7 +93,7 @@ z-index: 20;
 }
 
 .logo-text {
-font-size: 18px; /* reduced slightly */
+font-size: 18px;
 font-weight: 700;
 letter-spacing: 0.1em;
 }
@@ -92,7 +102,7 @@ letter-spacing: 0.1em;
 position: absolute;
 left: 50%;
 transform: translateX(-50%);
-font-size: 14px; /* slightly smaller */
+font-size: 14px;
 white-space: nowrap;
 }
 
@@ -100,10 +110,10 @@ white-space: nowrap;
 background-color: #ffe500;
 color: #000;
 font-weight: 700;
-padding: 8px 20px; /* slimmer button */
+padding: 8px 20px;
 border-radius: 4px;
 text-decoration: none;
-font-size: 13px; /* smaller font */
+font-size: 13px;
 display: inline-flex;
 align-items: center;
 gap: 6px;
@@ -136,8 +146,8 @@ object-fit: cover;
 .banner-content {
 position: absolute;
 z-index: 2;
-top: 75%;
-left: 4%;
+top: 55%;
+left: 12%;
 transform: translateY(-50%);
 width: 90%;
 max-width: 550px;
@@ -153,7 +163,7 @@ font-weight: 700;
 font-size: 96px;
 line-height: 1;
 margin: 0;
-white-space: nowrap; /* force one line */
+white-space: nowrap;
 }
 
 .description {
@@ -175,6 +185,27 @@ display: inline-flex;
 align-items: center;
 gap: 8px;
 transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Bottom Bar */
+.bottom-bar {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+background-color: #F8F8F8; /* same as top bar */
+border-top: 1px solid #EAEAEA;
+padding: 14px 20px;
+text-align: center;
+z-index: 3;
+}
+
+.bottom-bar p {
+margin: 0;
+font-size: 14px;
+font-weight: 600;
+letter-spacing: 0.05em;
+color: #000;
 }
 
 /* Button Animations */
@@ -221,6 +252,6 @@ top: 50%;
 
 {% javascript %}
 document.addEventListener('DOMContentLoaded', () => {
-console.log('Banner version with slimmer nav + single-line title loaded.');
+console.log('Banner version with slimmer nav + single-line title + bottom bar loaded.');
 });
 {% endjavascript %}

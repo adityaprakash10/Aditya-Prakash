@@ -1,3 +1,37 @@
+{% comment %}
+  🎁 Banner Section
+  Displays a hero-style banner with a background SVG, title, tagline, and button.
+  Customize from Theme Editor (Online Store > Customize)
+{% endcomment %}
+
+<section class="banner-section">
+  <!-- Background Illustration -->
+  <div class="banner-bg">
+    <img src="{{ 'Frame.svg' | asset_url }}" alt="Background frame" />
+  </div>
+
+  <!-- Logo Text -->
+  <div class="logo-text">{{ section.settings.logo_text }}</div>
+
+  <!-- Header Tagline -->
+  <div class="header-tagline">{{ section.settings.header_tagline }}</div>
+
+  <!-- Main Title -->
+  <h1 class="main-title">{{ section.settings.main_title }}</h1>
+
+  <!-- Description -->
+  <p class="description">{{ section.settings.description }}</p>
+
+  <!-- Button -->
+  <a href="{{ section.settings.button_url }}" class="shop-button" role="button">
+    {{ section.settings.button_text }}
+    <span class="arrow">→</span>
+  </a>
+
+  <!-- Footer Note -->
+  <div class="footer-note">SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL</div>
+</section>
+
 {% schema %}
 {
   "name": "Banner Section",
@@ -9,7 +43,9 @@
     { "type": "text", "id": "button_text", "label": "Button Text", "default": "CHOOSE GIFT" },
     { "type": "url", "id": "button_url", "label": "Button Link", "default": "/collections/all" }
   ],
-  "presets": [ { "name": "Banner Section" } ]
+  "presets": [
+    { "name": "Banner Section" }
+  ]
 }
 {% endschema %}
 
@@ -52,7 +88,6 @@
   font-size: 32px;
   letter-spacing: 0.12em;
   color: black;
-  z-index: 2;
 }
 
 .header-tagline {
@@ -64,7 +99,6 @@
   font-size: 18px;
   letter-spacing: 0.06em;
   color: black;
-  z-index: 2;
 }
 
 .shop-button {
@@ -84,7 +118,6 @@
   align-items: center;
   gap: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-  z-index: 2;
   text-decoration: none;
 }
 
@@ -105,11 +138,9 @@
 .main-title {
   font-weight: 700;
   font-size: 72px;
-  margin: 0 auto 30px;
+  margin: 120px auto 30px;
   max-width: 600px;
   color: black;
-  z-index: 2;
-  position: relative;
 }
 
 .description {
@@ -119,8 +150,6 @@
   font-weight: 400;
   line-height: 1.5;
   color: rgb(80, 80, 80);
-  position: relative;
-  z-index: 2;
 }
 
 .footer-note {
@@ -129,8 +158,6 @@
   font-size: 12px;
   letter-spacing: 0.06em;
   color: #990000;
-  position: relative;
-  z-index: 2;
 }
 
 @media (max-width: 768px) {
@@ -156,18 +183,3 @@
   }
 }
 {% endstylesheet %}
-
-<div class="banner-section">
-  <div class="banner-bg">
-    <img src="{{ 'Frame.svg' | asset_url }}" alt="Background frame" />
-  </div>
-  <div class="logo-text">{{ section.settings.logo_text }}</div>
-  <div class="header-tagline">{{ section.settings.header_tagline }}</div>
-  <a href="{{ section.settings.button_url }}" class="shop-button" role="button" tabindex="0">
-    {{ section.settings.button_text }}
-    <span class="arrow">→</span>
-  </a>
-  <h1 class="main-title">{{ section.settings.main_title }}</h1>
-  <p class="description">{{ section.settings.description }}</p>
-  <div class="footer-note">SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL</div>
-</div>

@@ -1,7 +1,6 @@
 {% comment %}
-  🎁 Banner Section
-  Displays a hero-style banner with a background SVG, title, tagline, and button.
-  Customize from Theme Editor (Online Store > Customize)
+🎁 Banner Section
+Displays a hero-style banner with a background SVG, title, tagline, and button.
 {% endcomment %}
 
 <section class="banner-section">
@@ -10,23 +9,22 @@
     <img src="{{ 'Frame.svg' | asset_url }}" alt="Background frame" />
   </div>
 
-  <!-- Logo Text -->
-  <div class="logo-text">{{ section.settings.logo_text }}</div>
+  <!-- Top Bar -->
+  <div class="banner-top">
+    <div class="logo-text">{{ section.settings.logo_text }}</div>
+    <div class="header-tagline">{{ section.settings.header_tagline }}</div>
+    <a href="{{ section.settings.button_url }}" class="shop-button" role="button">
+      {{ section.settings.button_text }}
+      <span class="arrow">→</span>
+    </a>
+  </div>
 
-  <!-- Header Tagline -->
-  <div class="header-tagline">{{ section.settings.header_tagline }}</div>
-
-  <!-- Main Title -->
-  <h1 class="main-title">{{ section.settings.main_title }}</h1>
-
-  <!-- Description -->
-  <p class="description">{{ section.settings.description }}</p>
-
-  <!-- Button -->
-  <a href="{{ section.settings.button_url }}" class="shop-button" role="button">
-    {{ section.settings.button_text }}
-    <span class="arrow">→</span>
-  </a>
+  <!-- Main Content -->
+  <div class="banner-content">
+    <h1 class="main-title">{{ section.settings.main_title }}</h1>
+    <p class="description">{{ section.settings.description }}</p>
+    <a href="{{ section.settings.button_url }}" class="shop-now-btn">SHOP NOW →</a>
+  </div>
 
   <!-- Footer Note -->
   <div class="footer-note">SUSTAINABLE, ETHICALLY MADE CLOTHES IN SIZES XXS TO 6XL</div>
@@ -40,7 +38,7 @@
     { "type": "text", "id": "header_tagline", "label": "Header Tagline", "default": "Find the ideal gift for your loved ones." },
     { "type": "text", "id": "main_title", "label": "Main Title", "default": "The Gift Guide" },
     { "type": "textarea", "id": "description", "label": "Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
-    { "type": "text", "id": "button_text", "label": "Button Text", "default": "CHOOSE GIFT" },
+    { "type": "text", "id": "button_text", "label": "Top Button Text", "default": "CHOOSE GIFT" },
     { "type": "url", "id": "button_url", "label": "Button Link", "default": "/collections/all" }
   ],
   "presets": [
@@ -52,13 +50,14 @@
 {% stylesheet %}
 .banner-section {
   position: relative;
-  padding: 120px 40px 80px;
+  padding: 0;
   text-align: center;
   font-family: 'Inter', sans-serif;
   overflow: hidden;
   background: #fff;
 }
 
+/* Background Image */
 .banner-bg {
   position: absolute;
   top: 0; left: 0;
@@ -66,103 +65,121 @@
   height: 100%;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.15;
+  opacity: 1; /* Full opacity for dark black look */
 }
 
 .banner-bg img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  filter: brightness(0) invert(0); /* Ensures SVG appears fully black */
 }
 
-.banner-section > * {
+/* Top Navigation Bar */
+.banner-top {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 60px;
+  text-align: center;
 }
 
 .logo-text {
-  position: absolute;
-  left: 40px;
-  top: 40px;
-  font-weight: 600;
-  font-size: 32px;
+  font-weight: 700;
+  font-size: 28px;
   letter-spacing: 0.12em;
-  color: black;
+  color: #000;
 }
 
 .header-tagline {
-  position: absolute;
-  left: 50%;
-  top: 55px;
-  transform: translateX(-50%);
   font-weight: 400;
   font-size: 18px;
-  letter-spacing: 0.06em;
-  color: black;
+  letter-spacing: 0.05em;
+  color: #000;
 }
 
 .shop-button {
-  position: absolute;
-  right: 40px;
-  top: 40px;
   background-color: #ffe500;
-  color: #282828;
+  color: #000;
   font-weight: 700;
-  border: none;
-  padding: 16px 40px;
-  font-size: 18px;
-  cursor: pointer;
+  padding: 14px 36px;
+  font-size: 16px;
   border-radius: 4px;
-  letter-spacing: 0.04em;
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  gap: 6px;
   text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .shop-button:hover {
   background-color: #f0d600;
-  color: #181818;
+  transform: translateY(-2px);
 }
 
 .shop-button .arrow {
-  font-size: 20px;
   transition: transform 0.3s ease;
 }
-
 .shop-button:hover .arrow {
   transform: translateX(6px);
+}
+
+/* Centered Main Content */
+.banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  margin: 120px auto 100px;
+  color: #000;
+  text-align: center;
 }
 
 .main-title {
   font-weight: 700;
   font-size: 72px;
-  margin: 120px auto 30px;
-  max-width: 600px;
-  color: black;
+  margin-bottom: 24px;
 }
 
 .description {
-  max-width: 550px;
-  margin: 0 auto 60px;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: rgb(80, 80, 80);
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 40px;
+  line-height: 1.6;
 }
 
+.shop-now-btn {
+  background-color: #000;
+  color: #fff;
+  padding: 14px 36px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.shop-now-btn:hover {
+  background-color: #333;
+}
+
+/* Footer */
 .footer-note {
-  text-transform: uppercase;
-  font-weight: 500;
   font-size: 12px;
-  letter-spacing: 0.06em;
   color: #990000;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-bottom: 40px;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
-  .banner-section {
-    padding: 80px 20px 40px;
+  .banner-top {
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
   }
   .main-title {
     font-size: 42px;
@@ -170,16 +187,8 @@
   .description {
     font-size: 16px;
   }
-  .logo-text,
-  .header-tagline,
-  .shop-button {
-    position: static;
-    display: block;
-    margin: 0 auto 10px;
-    text-align: center;
-  }
-  .shop-button {
-    margin-bottom: 30px;
+  .shop-now-btn {
+    font-size: 14px;
   }
 }
 {% endstylesheet %}

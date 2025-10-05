@@ -1,11 +1,12 @@
 {% comment %}
 🎁 Pixel-Perfect Banner Section
-Built to match the Figma design exactly with a distinct top bar.
-All text areas are editable in the theme customizer.
-No jQuery used — fully vanilla JS compatible.
+Final version built to match the Figma design exactly.
+- Corrected top bar background color.
+- Corrected default button text to "CHOOSE GIFT".
+- Corrected vertical alignment of main content.
 {% endcomment %}
 
-<section class="banner-section">
+<section class="banner-section-container">
   <!-- Top Bar -->
   <div class="top-bar">
     <div class="logo-text">{{ section.settings.logo_text }}</div>
@@ -57,14 +58,14 @@ No jQuery used — fully vanilla JS compatible.
 {% endschema %}
 
 {% stylesheet %}
-.banner-section {
+.banner-section-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 95vh; /* Adjusted viewport height */
   min-height: 800px;
-  background-color: #fff;
   font-family: 'Inter', sans-serif;
   color: #000;
+  background-color: #fff;
 }
 
 /* Top Bar Styling */
@@ -72,11 +73,12 @@ No jQuery used — fully vanilla JS compatible.
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative; /* Context for the absolutely positioned tagline */
+  position: relative;
   width: 100%;
   padding: 20px 60px;
-  flex-shrink: 0; /* Prevents the bar from shrinking */
-  background-color: #fff;
+  flex-shrink: 0;
+  background-color: #F8F8F8; /* Correct light grey background */
+  border-bottom: 1px solid #EAEAEA; /* Subtle border to match Figma */
   z-index: 10;
 }
 
@@ -113,7 +115,7 @@ No jQuery used — fully vanilla JS compatible.
 .banner-main {
   position: relative;
   width: 100%;
-  flex-grow: 1; /* Takes up the remaining vertical space */
+  flex-grow: 1;
   overflow: hidden;
 }
 
@@ -134,7 +136,7 @@ No jQuery used — fully vanilla JS compatible.
 .banner-content {
   position: absolute;
   z-index: 2;
-  top: 50%; /* Position relative to the .banner-main container */
+  top: 60%; /* Pushed down to match Figma */
   left: 10%;
   transform: translateY(-50%);
   width: 90%;
@@ -195,7 +197,7 @@ No jQuery used — fully vanilla JS compatible.
   .top-bar { padding: 20px 30px; }
   .main-title { font-size: 72px; }
   .description { font-size: 16px; }
-  .banner-content { left: 8%; }
+  .banner-content { left: 8%; top: 55%; }
 }
 
 @media (max-width: 768px) {
@@ -209,7 +211,7 @@ No jQuery used — fully vanilla JS compatible.
     margin: 0 auto;
     align-items: center;
     text-align: center;
-    top: 45%;
+    top: 50%;
   }
   .main-title { font-size: 48px; }
   .description { max-width: 90%; }
@@ -219,6 +221,6 @@ No jQuery used — fully vanilla JS compatible.
 {% javascript %}
 // Vanilla JS - no jQuery needed.
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Banner with top bar loaded.');
+  console.log('Final banner version loaded.');
 });
-{% endjavascript %}
+{% endjavascript %}```

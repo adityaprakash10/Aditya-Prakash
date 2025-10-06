@@ -66,6 +66,9 @@
 "presets": [{ "name": "Banner Section" }]
 }
 {% endschema %}
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400&display=swap" rel="stylesheet">
+
+
 
 {% stylesheet %}
 .banner-section-container {
@@ -201,12 +204,17 @@ z-index: 3;
 }
 
 .bottom-bar p {
-margin: 0;
-font-size: 14px;
-font-weight: 600;
-letter-spacing: 0.05em;
-color: #000;
+  font-family: 'Jost', sans-serif; /* set Jost font */
+  font-weight: 400;                 /* regular */
+  font-style: normal;               /* regular style */
+  font-size: 16px;                  /* 16px */
+  line-height: 13.42px;             /* 13.42px */
+  letter-spacing: 0px;              /* 0 */
+  color: #000;
+  margin: 0;
+  font-weight: 400;
 }
+
 
 /* Button Animations */
 .arrow {

@@ -7,7 +7,7 @@ No jQuery. Vanilla JS only.
 {
   "name": "Grid Section",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Section heading", "default": "Tissot vision in the wild" },
+    { "type": "text", "id": "heading", "label": "Section heading", "default": "Tisso vision in the wild" },
     { "type": "product", "id": "product_1", "label": "Select Product 1" },
     { "type": "product", "id": "product_2", "label": "Select Product 2" },
     { "type": "product", "id": "product_3", "label": "Select Product 3" },
@@ -32,7 +32,7 @@ No jQuery. Vanilla JS only.
         {% if product_handle != blank %}
           {% assign product = all_products[product_handle] %}
           <div class="grid-item" role="listitem">
-            <img src="{{ product.featured_image | img_url: '800x' }}" alt="{{ product.title }}" class="grid-item-image">
+            <img src="{{ product.featured_image | img_url: '900x' }}" alt="{{ product.title }}" class="grid-item-image">
             <div class="grid-item-overlay">
               <button class="open-modal-btn" data-product-handle="{{ product.handle }}" aria-label="Open {{ product.title }} details">+</button>
             </div>
@@ -79,13 +79,13 @@ No jQuery. Vanilla JS only.
 <style>
 /* Container & heading */
 .grid-section-wrapper {
-  padding: 60px 0; /* perfect top margin, extended height for larger images */
+  padding: 80px 0 100px; /* extended height */
   background: #fff;
 }
 .container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 40px; /* reduced side margins */
+  padding: 0 40px;
   box-sizing: border-box;
 }
 .grid-section-heading {
@@ -93,7 +93,7 @@ No jQuery. Vanilla JS only.
   font-size: 34px;
   margin: 0 0 40px 0;
   color: #111;
-  text-align: center;
+  text-align: left; /* left-aligned with image */
 }
 
 /* Grid layout */
@@ -111,17 +111,17 @@ No jQuery. Vanilla JS only.
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 0; /* no curved corners */
   cursor: pointer;
 }
 .grid-item-image {
   width: 100%;
-  height: 480px; /* enlarged for taller images */
+  height: 500px; /* slightly taller */
   object-fit: cover;
   transition: transform 0.4s ease;
 }
 .grid-item:hover .grid-item-image {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 /* Centered overlay + button */
@@ -135,22 +135,22 @@ No jQuery. Vanilla JS only.
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 55px;
-  height: 55px;
+  width: 28px; /* 50% reduced */
+  height: 28px;
   border-radius: 50%;
-  background: #fff;        /* white circular background */
-  color: #000;             /* black + sign */
-  border: none;
-  font-size: 30px;
-  font-weight: 600;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000; /* thin black circle */
+  font-size: 18px;
+  font-weight: 400;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  opacity: 1; /* always visible */
+  box-shadow: none;
+  line-height: 0;
+  transition: transform 0.3s ease;
 }
-.grid-item:hover .open-modal-btn {
-  opacity: 1;
-  transform: translate(0, 0) scale(1.05);
+.open-modal-btn:hover {
+  transform: scale(1.1);
 }
 
 /* Empty placeholders */
@@ -268,7 +268,7 @@ No jQuery. Vanilla JS only.
     grid-template-columns: repeat(2, 1fr);
   }
   .grid-item-image {
-    height: 380px;
+    height: 400px;
   }
 }
 @media (max-width: 600px) {
@@ -277,9 +277,6 @@ No jQuery. Vanilla JS only.
   }
   .grid-item-image {
     height: 320px;
-  }
-  .open-modal-btn {
-    opacity: 1; /* always visible on mobile for tap UX */
   }
   .container {
     padding: 0 20px;
@@ -291,5 +288,5 @@ No jQuery. Vanilla JS only.
 </style>
 
 <script>
-{{ content_for_header }} // keep your existing JS logic below unchanged
+{{ content_for_header }} // your existing modal JS stays unchanged
 </script>

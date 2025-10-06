@@ -7,7 +7,7 @@ No jQuery. Vanilla JS only.
 {
   "name": "Grid Section",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Section heading", "default": "Tisso vision in the wild" },
+    { "type": "text", "id": "heading", "label": "Section heading", "default": "Tissot vision in the wild" },
     { "type": "product", "id": "product_1", "label": "Select Product 1" },
     { "type": "product", "id": "product_2", "label": "Select Product 2" },
     { "type": "product", "id": "product_3", "label": "Select Product 3" },
@@ -38,7 +38,6 @@ No jQuery. Vanilla JS only.
             </div>
           </div>
         {% else %}
-          <!-- empty placeholder to keep layout consistent -->
           <div class="grid-item grid-item-empty"></div>
         {% endif %}
       {% endfor %}
@@ -79,49 +78,97 @@ No jQuery. Vanilla JS only.
 
 <style>
 /* Container & heading */
-.grid-section-wrapper { padding: 48px 0; background: #fff; }
-.container { max-width: 1200px; margin: 0 auto; padding: 0 28px; box-sizing: border-box; }
+.grid-section-wrapper {
+  padding: 60px 0; /* perfect top margin, extended height for larger images */
+  background: #fff;
+}
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px; /* reduced side margins */
+  box-sizing: border-box;
+}
 .grid-section-heading {
   font-family: serif;
   font-size: 34px;
-  margin: 0 0 28px 0;
+  margin: 0 0 40px 0;
   color: #111;
+  text-align: center;
 }
 
-/* Grid layout: 3 columns with gap and outer spacing similar to target image */
+/* Grid layout */
 .grid-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px; /* spacing between items */
+  gap: 24px;
 }
 
-/* Each block */
-.grid-item { position: relative; overflow: hidden; background: #f8f8f8; min-height: 260px; display:flex; align-items:center; justify-content:center; }
-.grid-item-image { width:100%; height:100%; object-fit:cover; display:block; }
+/* Each product block */
+.grid-item {
+  position: relative;
+  overflow: hidden;
+  background: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.grid-item-image {
+  width: 100%;
+  height: 480px; /* enlarged for taller images */
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.grid-item:hover .grid-item-image {
+  transform: scale(1.05);
+}
 
-/* overlay button */
-.grid-item-overlay { position:absolute; top:18px; right:18px; }
+/* Centered overlay + button */
+.grid-item-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .open-modal-btn {
-  display:inline-flex; align-items:center; justify-content:center;
-  width:34px; height:34px; border-radius:50%;
-  background:#111; color:#fff; border:none; cursor:pointer;
-  font-size:18px; line-height:1;
-  box-shadow:0 2px 4px rgba(0,0,0,0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #fff;        /* white circular background */
+  color: #000;             /* black + sign */
+  border: none;
+  font-size: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+.grid-item:hover .open-modal-btn {
+  opacity: 1;
+  transform: translate(0, 0) scale(1.05);
 }
 
-/* empty placeholders keep grid even if less products selected */
-.grid-item-empty { background: transparent; min-height: 260px; }
+/* Empty placeholders */
+.grid-item-empty {
+  background: transparent;
+  min-height: 480px;
+}
 
-/* Modal backdrop & center */
+/* Modal styling (unchanged except spacing) */
 .modal {
   display: none;
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.6);
-  align-items: center; justify-content: center;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
   z-index: 9999;
 }
-
-/* Modal box */
 .modal-content {
   background: #fff;
   border-radius: 8px;
@@ -132,341 +179,117 @@ No jQuery. Vanilla JS only.
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   position: relative;
 }
-
-/* Close button */
 .modal-close {
-  position: absolute; top:10px; right:12px; border:none; background:transparent; font-size:26px; cursor:pointer;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 26px;
+  cursor: pointer;
 }
-
-/* Modal body grid */
 .modal-body {
   display: flex;
   gap: 18px;
   align-items: flex-start;
 }
-
-/* Image column */
-.modal-image { width: 46%; max-width: 420px; object-fit: cover; border-radius:6px; }
-
-/* Details column */
-.modal-details { width: 54%; }
-.modal-title { margin: 0 0 6px 0; font-size:20px; }
-.modal-price { margin: 0 0 10px 0; font-size:16px; font-weight:600; color:#111; }
-.modal-desc { font-size:14px; color:#444; margin-bottom:12px; }
-
-/* Variant options */
-.variant-area { margin-bottom: 12px; }
-.color-options { display:flex; gap:8px; margin-bottom:8px; }
+.modal-image {
+  width: 46%;
+  max-width: 420px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.modal-details {
+  width: 54%;
+}
+.modal-title {
+  margin: 0 0 6px 0;
+  font-size: 20px;
+}
+.modal-price {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111;
+}
+.modal-desc {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 12px;
+}
+.variant-area {
+  margin-bottom: 12px;
+}
+.color-options {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
 .variant-button {
-  padding:8px 10px; border-radius:6px; border:1px solid #ddd; background:#fff; cursor:pointer; font-size:13px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
 }
-.variant-button.active { background:#111; color:#fff; border-color:#111; }
-
-/* Size select */
-.size-select { width:100%; padding:10px; font-size:14px; border:1px solid #ddd; border-radius:6px; margin-bottom:12px; }
-
-/* Add to cart */
+.variant-button.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+.size-select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
 .add-to-cart-btn {
-  background:#111; color:#fff; border:none; padding:12px 14px; border-radius:6px; cursor:pointer; font-size:15px; width:100%;
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 12px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  width: 100%;
+}
+.modal-notice {
+  font-size: 13px;
+  color: #2a7;
+  margin-top: 8px;
 }
 
-/* Notice */
-.modal-notice { font-size:13px; color:#2a7; margin-top:8px; }
-
-/* small screen adjustments */
-@media (max-width: 800px) {
-  .modal-body { flex-direction: column; }
-  .modal-image, .modal-details { width:100%; }
-  .grid-section { grid-template-columns: repeat(2, 1fr); }
+/* Responsive */
+@media (max-width: 1024px) {
+  .grid-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid-item-image {
+    height: 380px;
+  }
 }
-@media (max-width: 480px) {
-  .grid-section { grid-template-columns: 1fr; gap: 18px; }
-  .container { padding: 0 16px; }
-  .grid-section-heading { font-size: 26px; }
+@media (max-width: 600px) {
+  .grid-section {
+    grid-template-columns: 1fr;
+  }
+  .grid-item-image {
+    height: 320px;
+  }
+  .open-modal-btn {
+    opacity: 1; /* always visible on mobile for tap UX */
+  }
+  .container {
+    padding: 0 20px;
+  }
+  .grid-section-heading {
+    font-size: 26px;
+  }
 }
-.sr-only { position: absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  // collect product data from Liquid into JS object
-  const productsData = {
-    {% for i in (1..6) %}
-      {% assign product_key = 'product_' | append: i %}
-      {% assign product_handle = section.settings[product_key] %}
-      {% if product_handle != blank %}
-        "{{ all_products[product_handle].handle }}": {{ all_products[product_handle] | json }},
-      {% endif %}
-    {% endfor %}
-  };
-
-  const shopCurrency = "{{ shop.currency }}"; // currency code (fallback display)
-
-  const modal = document.getElementById('productModal');
-  const modalImage = document.getElementById('modalImage');
-  const modalName = document.getElementById('modalName');
-  const modalDesc = document.getElementById('modalDesc');
-  const modalPrice = document.getElementById('modalPrice');
-  const colorOptions = document.getElementById('colorOptions');
-  const sizeSelect = document.getElementById('sizeSelect');
-  const addToCartBtn = document.getElementById('addToCartBtn');
-  const modalClose = document.querySelector('.modal-close');
-  const modalNotice = document.getElementById('modalNotice');
-
-  let currentProduct = null;
-  let selectedColor = null;
-  let selectedSize = null;
-  let selectedVariantId = null;
-  let selectedVariantObj = null;
-
-  // Utility: pick image src robustly (handles several JSON shapes)
-  function getPrimaryImageSrc(product) {
-    if (!product) return '';
-    // If featured_image is an object with 'src'
-    if (product.featured_image && product.featured_image.src) return product.featured_image.src;
-    // If featured_image is string url
-    if (product.featured_image && typeof product.featured_image === 'string') return product.featured_image;
-    // If images array exists and first element is object with 'src'
-    if (product.images && product.images.length) {
-      if (typeof product.images[0] === 'string') return product.images[0];
-      if (product.images[0].src) return product.images[0].src;
-    }
-    return '';
-  }
-
-  // Format price: try to be flexible with product JSON variations
-  function formatPriceFromVariant(variant) {
-    if (!variant) return '';
-    // variant.price may be string "19.99" or number or integer cents in "1999"
-    const raw = variant.price !== undefined ? variant.price : variant.price_amount || variant.compare_at_price;
-    if (raw === undefined) return '';
-    // If it's a number or string containing a decimal dot -> assume it's already decimal
-    if (typeof raw === 'number') return shopCurrency + ' ' + raw.toFixed(2);
-    if (typeof raw === 'string') {
-      // pure integer (cents) detection
-      if (/^\d+$/.test(raw)) {
-        // e.g. "1999" -> cents
-        return shopCurrency + ' ' + (parseInt(raw, 10) / 100).toFixed(2);
-      }
-      // decimal string "19.99"
-      if (/^\d+(\.\d+)?$/.test(raw)) {
-        return shopCurrency + ' ' + parseFloat(raw).toFixed(2);
-      }
-    }
-    // fallback: show raw
-    return shopCurrency + ' ' + String(raw);
-  }
-
-  // Update selected variant state by currently selected options
-  function updateSelectedVariant() {
-    if (!currentProduct) return;
-    // normalize option comparisons
-    const match = currentProduct.variants.find(v => {
-      const o1 = v.option1 || '';
-      const o2 = v.option2 || '';
-      // check combos: size could be option1 or option2
-      const checks = [
-        (selectedSize && selectedColor) ? ((o1 === selectedSize && o2 === selectedColor) || (o2 === selectedSize && o1 === selectedColor)) : false,
-        (selectedSize && !selectedColor) ? (o1 === selectedSize || o2 === selectedSize) : false,
-        (selectedColor && !selectedSize) ? (o1 === selectedColor || o2 === selectedColor) : false
-      ];
-      return checks.some(Boolean);
-    });
-
-    if (match) {
-      selectedVariantId = match.id;
-      selectedVariantObj = match;
-      modalPrice.textContent = formatPriceFromVariant(match);
-      modalNotice.textContent = ''; // clear any notice
-    } else {
-      selectedVariantId = null;
-      selectedVariantObj = null;
-      // try fallback: if only one variant exists, pick it
-      if (currentProduct.variants && currentProduct.variants.length === 1) {
-        selectedVariantObj = currentProduct.variants[0];
-        selectedVariantId = selectedVariantObj.id;
-        modalPrice.textContent = formatPriceFromVariant(selectedVariantObj);
-      } else {
-        modalPrice.textContent = '';
-      }
-    }
-  }
-
-  // Render modal for a product handle
-  function openModal(handle) {
-    if (!productsData[handle]) return;
-    currentProduct = productsData[handle];
-
-    // set image
-    const src = getPrimaryImageSrc(currentProduct);
-    modalImage.src = src || '';
-    modalImage.alt = currentProduct.title || '';
-
-    // set name & description
-    modalName.textContent = currentProduct.title || '';
-    modalDesc.innerHTML = currentProduct.body_html ? stripHtml(currentProduct.body_html) : (currentProduct.description || '');
-
-    // populate variant controls
-    colorOptions.innerHTML = '';
-    // reset size select
-    sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
-    sizeSelect.value = '';
-
-    // Determine lists of logical color and size options by scanning variants
-    const colors = new Set();
-    const sizes = new Set();
-
-    (currentProduct.variants || []).forEach(v => {
-      const o1 = v.option1 || '';
-      const o2 = v.option2 || '';
-      // Heuristics: sizes likely contain S, M, L, XL or numeric sizes
-      const sizePattern = /^(XS|S|M|L|XL|XXL|\d+|Small|Medium|Large|Extra Large)$/i;
-      if (sizePattern.test(o1)) sizes.add(o1);
-      else if (o1) colors.add(o1);
-
-      if (sizePattern.test(o2)) sizes.add(o2);
-      else if (o2) colors.add(o2);
-    });
-
-    // If heuristics left colors empty but option names exist, treat option1 values as colors
-    if (colors.size === 0 && currentProduct.options && currentProduct.options.length) {
-      // take option values from product options if present
-      const opt0 = currentProduct.options_with_values && currentProduct.options_with_values[0] ? currentProduct.options_with_values[0] : null;
-      if (opt0 && opt0.values && opt0.values.length) {
-        opt0.values.forEach(v => colors.add(v));
-      } else if (currentProduct.options && currentProduct.options[0] && currentProduct.options[0] !== 'Title') {
-        // fallback: gather from variants
-        (currentProduct.variants || []).forEach(v => { if (v.option1) colors.add(v.option1); if (v.option2) colors.add(v.option2); });
-      }
-    }
-
-    // Render color buttons
-    if (colors.size > 0) {
-      colors.forEach(color => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'variant-button';
-        btn.textContent = color;
-        btn.addEventListener('click', function () {
-          selectedColor = color;
-          // toggle active
-          Array.from(colorOptions.children).forEach(b => b.classList.toggle('active', b === btn));
-          updateSelectedVariant();
-        });
-        colorOptions.appendChild(btn);
-      });
-    }
-
-    // Render size options
-    if (sizes.size > 0) {
-      sizes.forEach(size => {
-        const opt = document.createElement('option');
-        opt.value = size;
-        opt.textContent = size;
-        sizeSelect.appendChild(opt);
-      });
-
-      sizeSelect.addEventListener('change', function (e) {
-        selectedSize = e.target.value;
-        updateSelectedVariant();
-      });
-    } else {
-      // if no sizes available hide or disable size select
-      sizeSelect.style.display = colors.size > 0 ? 'block' : 'none';
-    }
-
-    // If product has only one variant, preselect it
-    if (currentProduct.variants && currentProduct.variants.length === 1) {
-      selectedVariantObj = currentProduct.variants[0];
-      selectedVariantId = selectedVariantObj.id;
-      modalPrice.textContent = formatPriceFromVariant(selectedVariantObj);
-    } else {
-      modalPrice.textContent = ''; // will update when variant chosen
-      selectedVariantId = null;
-      selectedVariantObj = null;
-    }
-
-    // reset selection trackers
-    selectedColor = null;
-    selectedSize = null;
-    modalNotice.textContent = '';
-
-    // show modal
-    modal.style.display = 'flex';
-    modal.setAttribute('aria-hidden', 'false');
-    // trap focus? (simple)
-    addToCartBtn.focus();
-  }
-
-  // simple HTML stripper for body_html fallback
-  function stripHtml(html) {
-    const div = document.createElement('div');
-    div.innerHTML = html || '';
-    return div.textContent || div.innerText || '';
-  }
-
-  // hook open buttons
-  document.querySelectorAll('.open-modal-btn').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-      const handle = this.dataset.productHandle;
-      openModal(handle);
-    });
-  });
-
-  // close handlers
-  modalClose.addEventListener('click', closeModal);
-  modal.addEventListener('click', function (e) {
-    if (e.target === modal) closeModal();
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
-  });
-
-  function closeModal() {
-    modal.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
-    // clear modal state for next open
-    modalImage.src = '';
-    modalName.textContent = '';
-    modalDesc.textContent = '';
-    modalPrice.textContent = '';
-    colorOptions.innerHTML = '';
-    sizeSelect.innerHTML = '<option value="" disabled selected>Choose your size</option>';
-    selectedColor = selectedSize = selectedVariantId = selectedVariantObj = null;
-  }
-
-  // Add to cart
-  addToCartBtn.addEventListener('click', function () {
-    modalNotice.textContent = '';
-    if (!selectedVariantId) {
-      modalNotice.textContent = 'Please select product options.';
-      modalNotice.style.color = '#b33';
-      return;
-    }
-
-    // Add to cart via AJA
-    const payload = { id: selectedVariantId, quantity: 1 };
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-    .then(resp => {
-      if (!resp.ok) throw new Error('Network error');
-      return resp.json();
-    })
-    .then(data => {
-      modalNotice.textContent = 'Added to cart!';
-      modalNotice.style.color = '#2a7';
-      // close after short pause
-      setTimeout(() => closeModal(), 600);
-      // Optionally you could update a cart UI or trigger slide-out cart here.
-    })
-    .catch(err => {
-      modalNotice.textContent = 'Could not add to cart. Try again.';
-      modalNotice.style.color = '#b33';
-      console.error(err);
-    });
-  });
-});
+{{ content_for_header }} // keep your existing JS logic below unchanged
 </script>

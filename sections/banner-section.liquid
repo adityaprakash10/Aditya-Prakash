@@ -227,7 +227,60 @@ gap: 25px;
   max-width: 500px;
 }
 
+.shop-now-btn {
+  position: relative;
+  overflow: hidden;
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 20.48px;
+  letter-spacing: 0px;
+  text-transform: uppercase;
+  background-color: #000;
+  color: #fff;
+  padding: 16px 40px;
+  border-radius: 4px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  z-index: 1; /* Ensure button content is above ::before */
+}
 
+/* Yellow sliding overlay (behind text) */
+.shop-now-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: #FFE500;
+  transition: width 0.4s ease;
+  z-index: -1; /* This is the fix — keep the slider behind text */
+}
+
+/* Hover effect */
+.shop-now-btn:hover::before {
+  width: 100%;
+}
+
+/* Change text + arrow color when hovered */
+.shop-now-btn:hover {
+  color: #000;
+}
+
+.shop-now-btn .arrow {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.shop-now-btn:hover .arrow {
+  color: #000;
+  transform: translateX(6px);
+}
 
 
 

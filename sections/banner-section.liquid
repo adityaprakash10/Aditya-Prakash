@@ -106,6 +106,7 @@
 {% endschema %}
 
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 
 {% stylesheet %}
 .banner-section-container {
@@ -133,10 +134,14 @@
 }
 
 .logo-text {
-  font-size: 18px;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 18px;          /* adjust visually */
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.1em;   /* Figma uses wide tracking */
+  text-transform: uppercase;
+  color: #000;
 }
+
 
 .header-tagline {
   font-family: 'Jost', sans-serif;

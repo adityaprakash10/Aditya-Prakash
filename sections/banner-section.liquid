@@ -190,13 +190,15 @@ gap: 25px;
 }
 
 .shop-now-btn {
+  position: relative;
+  overflow: hidden;
   font-family: 'Jost', sans-serif;
-  font-weight: 400;        /* Regular */
+  font-weight: 400;
   font-style: normal;
   font-size: 16px;
   line-height: 20.48px;
   letter-spacing: 0px;
-  text-transform: uppercase; /* Uppercase */
+  text-transform: uppercase;
   background-color: #000;
   color: #fff;
   padding: 16px 40px;
@@ -206,8 +208,44 @@ gap: 25px;
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  transition: color 0.3s ease;
 }
+
+/* Yellow sliding overlay */
+.shop-now-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: #FFE500;
+  transition: width 0.4s ease;
+  z-index: 0;
+}
+
+/* Bring text and arrow above the overlay */
+.shop-now-btn span,
+.shop-now-btn {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover effect */
+.shop-now-btn:hover::before {
+  width: 100%;
+}
+
+/* Change text and arrow color when hovered */
+.shop-now-btn:hover {
+  color: #000;
+}
+.shop-now-btn:hover .arrow {
+  color: #000;
+  transform: translateX(6px);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
 
 
 

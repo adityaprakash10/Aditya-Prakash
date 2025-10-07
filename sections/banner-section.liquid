@@ -1,7 +1,7 @@
 {% comment %}
-🎁 Pixel-Perfect Banner Section
-* Top nav bar slimmed 20%.
-* "The Gift Guide" shifted.
+🎁 Pixel-Perfect Banner Section 
+* Top nav bar slimmed 20%. 
+* "The Gift Guide" shifted. 
 * Added bottom bar overlay with sustainability message (same color as top bar).
 {% endcomment %}
 
@@ -11,7 +11,7 @@
     <div class="logo-text">{{ section.settings.logo_text }}</div>
     <div class="header-tagline">{{ section.settings.header_tagline }}</div>
     <a href="{{ section.settings.button_url }}" class="shop-button" role="button">
-      {{ section.settings.button_text }}
+      {{ section.settings.button_text }} 
       <span class="arrow">→</span>
     </a>
   </div>
@@ -26,7 +26,7 @@
       <h1 class="main-title">{{ section.settings.main_title }}</h1>
       <p class="description">{{ section.settings.description }}</p>
       <a href="{{ section.settings.main_button_url }}" class="shop-now-btn" role="button">
-        {{ section.settings.main_button_text }}
+        {{ section.settings.main_button_text }} 
         <span class="arrow">→</span>
       </a>
     </div>
@@ -42,18 +42,66 @@
 {
   "name": "Banner Section",
   "settings": [
-    { "type": "header", "content": "Top Bar" },
-    { "type": "text", "id": "logo_text", "label": "Logo Text", "default": "TISSO VISON" },
-    { "type": "text", "id": "header_tagline", "label": "Header Tagline", "default": "Find the ideal gift for your loved ones." },
-    { "type": "text", "id": "button_text", "label": "Top Button Text", "default": "CHOOSE GIFT" },
-    { "type": "url", "id": "button_url", "label": "Top Button Link" },
-    { "type": "header", "content": "Main Content" },
-    { "type": "text", "id": "main_title", "label": "Main Title", "default": "The Gift Guide" },
-    { "type": "textarea", "id": "description", "label": "Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season." },
-    { "type": "text", "id": "main_button_text", "label": "Main Button Text", "default": "SHOP NOW" },
-    { "type": "url", "id": "main_button_url", "label": "Main Button Link" }
+    {
+      "type": "header",
+      "content": "Top Bar"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo Text",
+      "default": "TISSO VISON"
+    },
+    {
+      "type": "text",
+      "id": "header_tagline",
+      "label": "Header Tagline",
+      "default": "Find the ideal gift for your loved ones."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Top Button Text",
+      "default": "CHOOSE GIFT"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Top Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Main Content"
+    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Main Title",
+      "default": "The Gift Guide"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Discover Joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved ones this holiday season."
+    },
+    {
+      "type": "text",
+      "id": "main_button_text",
+      "label": "Main Button Text",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "main_button_url",
+      "label": "Main Button Link"
+    }
   ],
-  "presets": [{ "name": "Banner Section" }]
+  "presets": [
+    {
+      "name": "Banner Section"
+    }
+  ]
 }
 {% endschema %}
 
@@ -77,7 +125,7 @@
   align-items: center;
   position: relative;
   width: 100%;
-  padding: 8px 20px;
+  padding: 8px 20px; /* 20% slimmer */
   flex-shrink: 0;
   background-color: #F8F8F8;
   border-bottom: 1px solid #EAEAEA;
@@ -100,7 +148,6 @@
   white-space: nowrap;
 }
 
-/* Buttons */
 .shop-button {
   font-family: 'Jost', sans-serif;
   font-weight: 400;
@@ -108,68 +155,16 @@
   font-size: 16px;
   line-height: 20.48px;
   letter-spacing: 0px;
-  text-transform: uppercase;
+  text-transform: uppercase; /* Uppercase */
   background-color: #ffe500;
   color: #000;
   padding: 8px 20px;
-  border-radius: 0; /* square corners */
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   text-decoration: none;
-  transition: all 0.5s ease;
-}
-
-.shop-now-btn {
-  font-family: 'Jost', sans-serif;
-  font-weight: 700;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 20.48px;
-  letter-spacing: 0px;
-  text-transform: uppercase;
-  background-color: #000;
-  color: #fff;
-  padding: 16px 40px;
-  border-radius: 0; /* square corners */
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  transition: all 0.5s ease;
-  width: 120%; /* 20% longer */
-  max-width: none;
-}
-
-/* Remove hover movement */
-.shop-button:hover,
-.shop-now-btn:hover {
-  transform: none;
-}
-
-/* Arrow transition removed */
-.shop-button .arrow,
-.shop-now-btn .arrow {
-  transition: none;
-}
-
-/* Slider effect */
-.shop-button::before,
-.shop-now-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background-color: yellow;
-  z-index: 0;
-  transition: left 0.5s ease;
-}
-
-.shop-button:hover::before,
-.shop-now-btn:hover::before {
-  left: 0;
+  transition: transform 0.3s ease;
 }
 
 /* Main Area Styling */
@@ -213,7 +208,7 @@
 
 .main-title {
   font-family: 'Jost', sans-serif;
-  font-weight: 500;
+  font-weight: 500; /* Medium */
   font-style: normal;
   font-size: 70px;
   line-height: 100%;
@@ -224,7 +219,7 @@
 
 .description {
   font-family: 'Jost', sans-serif;
-  font-weight: 400;
+  font-weight: 400; /* Regular */
   font-style: normal;
   font-size: 20px;
   line-height: 140%;
@@ -233,13 +228,33 @@
   max-width: 500px;
 }
 
+.shop-now-btn {
+  font-family: 'Jost', sans-serif;
+  font-weight: 400; /* Regular */
+  font-style: normal;
+  font-size: 16px;
+  line-height: 20.48px;
+  letter-spacing: 0px;
+  text-transform: uppercase; /* Uppercase */
+  background-color: #000;
+  color: #fff;
+  padding: 16px 40px;
+  border-radius: 4px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
 /* Bottom Bar */
 .bottom-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #F8F8F8;
+  background-color: #F8F8F8; /* same as top bar */
   border-top: 1px solid #EAEAEA;
   padding: 4px 12px;
   text-align: center;
@@ -247,29 +262,67 @@
 }
 
 .bottom-bar p {
-  font-family: 'Jost', sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 13.42px;
-  letter-spacing: 0px;
+  font-family: 'Jost', sans-serif; /* set Jost font */
+  font-weight: 400; /* regular */
+  font-style: normal; /* regular style */
+  font-size: 16px; /* 16px */
+  line-height: 13.42px; /* 13.42px */
+  letter-spacing: 0px; /* 0 */
   color: #000;
   margin: 0;
+  font-weight: 400;
+}
+
+/* Button Animations */
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.shop-button:hover,
+.shop-now-btn:hover {
+  transform: translateY(-4px);
+}
+
+.shop-button:hover .arrow,
+.shop-now-btn:hover .arrow {
+  transform: translateX(6px);
+}
+
+.shop-now-btn:hover {
+  background-color: #333;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 990px) {
-  .top-bar { padding: 12px 28px; }
-  .main-title { font-size: 72px; }
-  .description { font-size: 16px; }
-  .banner-content { left: 8%; top: 55%; }
+  .top-bar {
+    padding: 12px 28px;
+  }
+  .main-title {
+    font-size: 72px;
+  }
+  .description {
+    font-size: 16px;
+  }
+  .banner-content {
+    left: 8%;
+    top: 55%;
+  }
 }
 
 @media (max-width: 768px) {
-  .header-tagline { display: none; }
-  .top-bar { padding: 10px 18px; }
-  .logo-text { font-size: 18px; }
-  .shop-button { font-size: 12px; padding: 8px 16px; }
+  .header-tagline {
+    display: none;
+  }
+  .top-bar {
+    padding: 10px 18px;
+  }
+  .logo-text {
+    font-size: 18px;
+  }
+  .shop-button {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
   .banner-content {
     left: 0;
     right: 0;
@@ -278,13 +331,17 @@
     text-align: center;
     top: 50%;
   }
-  .main-title { font-size: 48px; }
-  .description { max-width: 90%; }
+  .main-title {
+    font-size: 48px;
+  }
+  .description {
+    max-width: 90%;
+  }
 }
 {% endstylesheet %}
 
 {% javascript %}
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Banner version with square buttons, longer Shop Now, and slider hover loaded.');
+  console.log('Banner version with slimmer nav + single-line title + bottom bar loaded.');
 });
 {% endjavascript %}

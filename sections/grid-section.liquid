@@ -50,7 +50,7 @@
         "type": "product",
         "id": "bonus_product",
         "label": "Select the Bonus Product",
-        "info": "This product will be added automatically when a variant with 'Black' and 'Medium' is added to the cart."
+        "info": "This product will be added automatically when a specific variant is added to the cart."
       }
     ],
     "presets": [
@@ -484,7 +484,8 @@
     font-size: 13px;
     color: #D32F2F;
     text-align: center;
-    height: 15px;
+    height: auto; /* Allow multi-line messages */
+    line-height: 1.4;
   }
 </style>
 
@@ -563,17 +564,21 @@
 
     async function addBonusProduct() {
       const bonusProductHandle = modal.dataset.bonusProductHandle;
+      
       if (!bonusProductHandle) {
-        console.warn('Bonus product handle is not set in the theme editor.');
+        notice.textContent = 'ERROR: Bonus product not selected in theme editor.';
         return;
       }
       
       try {
         const res = await fetch(`/products/${bonusProductHandle}.js`);
-        if (!res.ok) return;
+        if (!res.ok) {
+          notice.textContent = 'ERROR: Could not find bonus product. Check handle.';
+          return;
+        }
 
         const product = await res.json();
-        const bonusVariantId = product.variants[0].id;
+        const bonusVariantId = product.variants[0]?.id;
 
         if (bonusVariantId) {
           await fetch('/cart/add.js', {
@@ -581,9 +586,11 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: bonusVariantId, quantity: 1 })
           });
+        } else {
+          notice.textContent = 'ERROR: Bonus product is out of stock.';
         }
       } catch (error) {
-        console.error('Could not add bonus product:', error);
+        notice.textContent = 'ERROR: A network error occurred.';
       }
     }
 
@@ -694,29 +701,39 @@
         });
         if (res.ok) {
           // --- CONDITIONAL LOGIC ---
-          if (currentVariantObject && currentVariantObject.option1 === 'Medium' && currentVariantObject.option2 === 'Black') {
-            await addBonusProduct();
+          if (currentVariantObject) {
+            const sizeMatch = currentVariantObject.option1.trim().toLowerCase() === 'm';
+            const colorMatch = currentVariantObject.option2.trim().toLowerCase() === 'black';
+
+            if (sizeMatch && colorMatch) {
+              await addBonusProduct();
+            } else {
+              // This else block is for debugging; you can remove it later.
+              const size = currentVariantObject.option1.trim().toLowerCase();
+              const color = currentVariantObject.option2.trim().toLowerCase();
+              notice.textContent = `INFO: Conditions NOT MET. (Size: ${size}, Color: ${color})`;
+            }
           }
           // --- END CONDITIONAL LOGIC ---
 
-          // Close modal without success text
-          setTimeout(() => {
-            closeModal();
-            notice.textContent = '';
-          }, 800);
+          if (!notice.textContent.startsWith('ERROR')) {
+             setTimeout(() => {
+              closeModal();
+              notice.textContent = '';
+            }, 1500); // Increased delay to see messages
+          }
         } else {
           const errorData = await res.json();
           notice.textContent = errorData.description || 'Failed to add item.';
-          notice.style.color = '#D32F2F';
         }
       } catch {
-        notice.textContent = 'Error adding to cart.';
-        notice.style.color = '#D32F2F';
+        notice.textContent = 'Error during add to cart process.';
       } finally {
-        setTimeout(() => {
+        // Only re-enable the button if there was an error
+        if (notice.textContent) {
           addBtn.disabled = false;
           addBtn.innerHTML = originalText;
-        }, 800);
+        }
       }
     };
   });
